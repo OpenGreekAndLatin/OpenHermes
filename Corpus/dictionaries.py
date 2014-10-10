@@ -7,6 +7,7 @@ sys.path.append("../")
 
 import os
 from Tools.download import File
+from Tools.download import Copyrighted
 
 class Dictionary(object):
 	def __init__(self):
@@ -33,12 +34,17 @@ class Dictionary(object):
 class Gaffiot(Dictionary):
 	def __init__(self, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
-		self.url = "http://outils.biblissima.fr/collatinus/ressources/Gaffiot_1934.djvu"
+		#self.url = "http://outils.biblissima.fr/collatinus/ressources/Gaffiot_1934.djvu"
+		self.url = "http://sourceforge.net/projects/digital-gaffiot/?source=navbar"
 		self.sourcelang = "la"
 		self.targetlang = "fr"
 
 	def install(self):
 		self.download()
+
+	def download(self):
+		FileInstance = Copyrighted("Files", "gaffiot.xml", origin = "Dictionary")
+		FileInstance.check(force = True)
 
 class LS(Dictionary):
 	def __init__(self, *args, **kw):
@@ -71,6 +77,6 @@ class Calonghi(Dictionary):
 		self.sourcelang = "de"
 		self.targetlang = "it"
 
-		
+
 	def install(self):
 		self.download()

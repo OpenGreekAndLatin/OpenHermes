@@ -5,6 +5,7 @@ import os
 import wget
 import subprocess
 
+
 class File(object):
 	def __init__(self, url, path, filename, mime = None):
 		"""
@@ -34,6 +35,25 @@ class File(object):
 			else:
 				return False
 		return True
+
+
+class Copyrighted(File):
+	def __init__(self, destination, filename, origin = ""):
+		self.__dir__ = os.path.dirname(os.path.abspath(__file__))
+		self.path = os.path.join(self.__dir__, "../{0}/{1}".format(destination, filename))
+		self.path = os.path.abspath(self.path)
+		self.filename = filename
+
+		self.origin = os.path.abspath(os.path.join(self.__dir__, "../Copyrighted/{0}{1}".format(origin, filename)))
+
+	def download(self):
+		try :
+			shutils.copyfile(self.origin, self.path)
+			return True
+		except Exception as E:
+			print E
+			return False
+		
 
 class Github(object):
 	def __init__(self, user, repository, path):
