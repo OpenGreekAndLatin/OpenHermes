@@ -13,6 +13,7 @@ class Dictionary(object):
 		self.sourcelang = None
 		self.targetlang = None
 		self.url = None
+
 		pass
 
 	def install(self):
@@ -26,7 +27,8 @@ class Dictionary(object):
 
 	def download(self):
 		filename = os.path.basename(self.url)
-		print filename
+		self.download = File(self.url, "Files", filename)
+		return self.download.check(force = True)
 
 class Gaffiot(Dictionary):
 	def __init__(self, *args, **kw):
@@ -59,6 +61,3 @@ class Calonghi(Dictionary):
 		self.url = "http://outils.biblissima.fr/collatinus/ressources/Calonghi_1898.djvu"
 		self.sourcelang = "de"
 		self.targetlang = "it"
-
-D = Georges()
-D.download()

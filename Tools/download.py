@@ -12,16 +12,19 @@ class File(object):
 		"""
 		self.__dir__ = os.path.dirname(os.path.abspath(__file__))
 		self.path = os.path.join(self.__dir__, "../{0}/{1}".format(path, filename))
+		self.path = os.path.abspath(self.path)
+
 		self.filename = filename
 		self.url = url
 		self.mime = mime
 
 	def download(self):
 		try:
-			filename = wget.download(self.url)
-			os.rename(os.path.join(self.__dir__, filename), self.path)
+			filename = wget.download(self.url, self.path)
+			#os.rename(os.path.join(self.__dir__, filename), self.path)
 			return True
-		except:
+		except Exception as E:
+			print E
 			return False
 
 	def check(self, force = False):
