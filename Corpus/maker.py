@@ -5,6 +5,7 @@
 import sys
 sys.path.append("../")
 
+import os
 from Tools.download import File
 
 class Dictionary(object):
@@ -22,6 +23,10 @@ class Dictionary(object):
 
 	def search(self):
 		raise NotImplementedError("Install is not installed")
+
+	def download(self):
+		filename = os.path.basename(self.url)
+		print filename
 
 class Gaffiot(Dictionary):
 	def __init__(self, *args, **kw):
@@ -55,3 +60,5 @@ class Calonghi(Dictionary):
 		self.sourcelang = "de"
 		self.targetlang = "it"
 
+D = Georges()
+D.download()
