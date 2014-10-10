@@ -37,6 +37,9 @@ class Gaffiot(Dictionary):
 		self.sourcelang = "la"
 		self.targetlang = "fr"
 
+	def install(self):
+		self.download()
+
 class LS(Dictionary):
 	def __init__(self, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
@@ -44,6 +47,9 @@ class LS(Dictionary):
 		self.url = "http://outils.biblissima.fr/collatinus/ressources/Lewis_and_Short_1879.xml"
 		self.sourcelang = "la"
 		self.targetlang = "en"
+
+	def install(self):
+		self.download()
 
 class Georges(Dictionary):
 	def __init__(self, *args, **kw):
@@ -53,6 +59,9 @@ class Georges(Dictionary):
 		self.sourcelang = "de"
 		self.targetlang = "fr"
 
+	def install(self):
+		self.download()
+
 
 class Calonghi(Dictionary):
 	def __init__(self, *args, **kw):
@@ -61,3 +70,7 @@ class Calonghi(Dictionary):
 		self.url = "http://outils.biblissima.fr/collatinus/ressources/Calonghi_1898.djvu"
 		self.sourcelang = "de"
 		self.targetlang = "it"
+
+		
+	def install(self):
+		self.download()
