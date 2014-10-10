@@ -4,6 +4,7 @@
 import os
 import wget
 import subprocess
+import shutil
 
 
 class File(object):
@@ -48,7 +49,7 @@ class Copyrighted(File):
 
 	def download(self):
 		try :
-			shutils.copyfile(self.origin, self.path)
+			shutil.copyfile(self.origin, self.path)
 			return True
 		except Exception as E:
 			print E

@@ -43,7 +43,7 @@ class Gaffiot(Dictionary):
 		self.download()
 
 	def download(self):
-		FileInstance = Copyrighted("Files", "gaffiot.xml", origin = "Dictionary")
+		FileInstance = Copyrighted("Files", "gaffiot.xml", origin = "Dictionary/")
 		FileInstance.check(force = True)
 
 class LS(Dictionary):
