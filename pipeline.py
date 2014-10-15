@@ -4,11 +4,13 @@
 #This file contains the whole algorithm
 
 from Corpus import dictionaries
+from Corpus import latin
+
 Dictionaries = {
-	"Calonghi" : dictionaries.Calonghi(),
-	"Gaffiot" : dictionaries.Gaffiot(),
-	"LS" : dictionaries.LS(),
-	"Georges" : dictionaries.Georges(),
+	"Calonghi" : latin.Calonghi(),
+	"Gaffiot" : latin.Gaffiot(),
+	"LS" : latin.LS(),
+	"Georges" : latin.Georges(),
 }
 
 #Install part
