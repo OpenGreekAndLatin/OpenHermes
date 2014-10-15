@@ -20,8 +20,21 @@ class Dictionary(object):
 	def install(self):
 		raise NotImplementedError("Install is not installed")
 
-	def convert(self):
-		raise NotImplementedError("Install is not installed")
+	def toDataformat(self, data):
+		"""
+			Should convert to Pickle right now, keeping toDataformat broad...
+		"""
+		raise NotImplementedError("toDataformat is not implemented")
+
+	def checkConverted(self):
+		raise NotImplementedError("CheckConverted is not implemented")
+
+	def convert(self, force = True):
+		"""
+			Force parameters should force creating, while normal behaviour should use checkConverted
+			Then it should call self.toPickle
+		"""
+		raise NotImplementedError("Convert is not implemented")
 
 	def search(self):
 		raise NotImplementedError("Install is not installed")
