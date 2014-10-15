@@ -22,6 +22,10 @@ class Dictionary(object):
     def install(self):
         raise NotImplementedError("Install is not installed")
 
+<<<<<<< HEAD
+    def convert(self):
+        raise NotImplementedError("Install is not installed")
+=======
 	def toDataformat(self, data):
 		"""
 			Should convert to Pickle right now, keeping toDataformat broad...
@@ -37,6 +41,7 @@ class Dictionary(object):
 			Then it should call self.toPickle
 		"""
 		raise NotImplementedError("Convert is not implemented")
+>>>>>>> 1bf88080a757dcbe1294e78f5fc3188e3f851afe
 
     def search(self):
         raise NotImplementedError("Install is not installed")
@@ -45,6 +50,8 @@ class Dictionary(object):
         filename = os.path.basename(self.url)
         self.download = File(self.url, "Files", filename)
         return self.download.check(force=True)
+
+<<<<<<< HEAD
 
 class Gaffiot(Dictionary):
     def __init__(self, *args, **kw):
@@ -140,3 +147,9 @@ class LSJ(Dictionary):
                         tr_dict[word.orth.text].append(s.tr.text)
                     except:
                         continue
+=======
+	def download(self):
+		filename = os.path.basename(self.url)
+		self.download = File(self.url, "Files", filename)
+		return self.download.check(force = True)
+>>>>>>> 1bf88080a757dcbe1294e78f5fc3188e3f851afe
