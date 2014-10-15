@@ -26,7 +26,7 @@ class File(object):
 			#os.rename(os.path.join(self.__dir__, filename), self.path)
 			return True
 		except Exception as E:
-			print E
+			print(E)
 			return False
 
 	def check(self, force = False):
@@ -52,7 +52,7 @@ class Copyrighted(File):
 			shutil.copyfile(self.origin, self.path)
 			return True
 		except Exception as E:
-			print E
+			print(E)
 			return False
 		
 
