@@ -10,6 +10,8 @@ import os
 from Tools.download import File
 from Tools.download import Copyrighted
 
+from bs4 import BeautifulSoup as b_soup
+from collections import defaultdict
 
 class Dictionary(object):
     def __init__(self):
