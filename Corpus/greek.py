@@ -24,7 +24,7 @@ class LSJ(Dictionary):
 
 	def download(self):
 		self.file =  GithubDir("PerseusDL", "lexica", "Files/LSJ", sourcedir = "CTS_XML_TEI/perseus/pdllex/grc/lsj")
-		self.file.zip()
+		self.file.download()
 		#Should implement a download for multiple files
 
 	def convert(self):
