@@ -13,6 +13,7 @@ class File(object):
 		Download a file at @url and put it in Software_Root/path/filename
 		"""
 		self.__dir__ = os.path.dirname(os.path.abspath(__file__))
+		self.dir = os.path.abspath(os.path.join(self.__dir__, "../{0}".format(path)))
 		self.path = os.path.join(self.__dir__, "../{0}/{1}".format(path, filename))
 		self.path = os.path.abspath(self.path)
 
@@ -20,7 +21,13 @@ class File(object):
 		self.url = url
 		self.mime = mime
 
+	def directory(self):
+		if not os.path.exists(self.dir):
+			return os.makedirs(self.dir)
+		return False
+
 	def download(self):
+		self.directory()
 		try:
 			filename = wget.download(self.url, self.path)
 			#os.rename(os.path.join(self.__dir__, filename), self.path)
@@ -36,6 +43,16 @@ class File(object):
 			else:
 				return False
 		return True
+
+	def unzip(self):
+		if mime == "zip":
+			try:
+				return True
+			except Exception as E:
+				print E
+				return False
+		return False
+
 
 
 class Copyrighted(File):
@@ -65,6 +82,7 @@ class Github(object):
 		self.path = os.path.join(self.__dir__, "../{0}".format(path))
 		self.repository = repository
 		self.user = user
+		self.file = None
 
 	def url(self):
 		return "https://github.com/{0}/{1}.git".format(self.user, self.repository)
@@ -74,3 +92,16 @@ class Github(object):
 
 	def clone(self):
 		return subprocess.call(['git', 'clone', self.url(), self.path])
+
+	def zip(self):
+		self.file = File(
+				url = "https://github.com/{0}/{1}/archive/master.zip".format(self.user, self.repository), 
+				path = "Files/Zip", 
+				filename = self.repository + ".zip"
+			)
+		if not self.file.check():
+			self.file.download()
+
+class GithubDir(Github):
+	def __init__(self, user, repository, path, sourcedir):
+		super(self.__class__, self).__init__(user, repository, path)

@@ -5,6 +5,7 @@
 
 from Corpus import dictionaries
 from Corpus import latin
+from Corpus import greek
 
 Dictionaries = {
 	"Calonghi" : latin.Calonghi(),
@@ -14,5 +15,10 @@ Dictionaries = {
 }
 
 #Install part
+"""
 for dictionaryName in Dictionaries:
 	Dictionaries[dictionaryName].install()
+"""
+
+LSJ = greek.LSJ()
+LSJ.download()

@@ -6,6 +6,7 @@ import sys
 sys.path.append("../")
 
 from Corpus.dictionaries import Dictionary
+from Tools.download import GithubDir
 
 from bs4 import BeautifulSoup as b_soup
 from collections import defaultdict
@@ -22,8 +23,9 @@ class LSJ(Dictionary):
 		self.download()
 
 	def download(self):
+		self.file =  GithubDir("PerseusDL", "lexica", "Files/LSJ", sourcedir = "CTS_XML_TEI/perseus/pdllex/grc/lsj")
+		self.file.zip()
 		#Should implement a download for multiple files
-		pass
 
 	def convert(self):
 		#since we have the url above, we may not need this stuff
