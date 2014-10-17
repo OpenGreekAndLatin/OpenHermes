@@ -72,5 +72,4 @@ class Dictionary(object):
 					except Exception as E:
 						print E
 						continue
-				break
 		return data
