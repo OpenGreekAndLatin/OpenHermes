@@ -27,14 +27,4 @@ class LSJ(Dictionary):
 		return self.file.download()
 
 	def convert(self):
-		tr_dict = defaultdict(list)
-		for file in files:
-			with open(file) as f:
-				text = f.read()
-			soup = b_soup(text)
-			for word in soup.find_all('entryfree'):
-				for s in word.find_all('sense'):
-					try:
-						tr_dict[word.orth.text].append(s.tr.text)
-					except:
-						continue
+		return self.PerseusTEIConverter()
