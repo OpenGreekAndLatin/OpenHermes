@@ -15,17 +15,16 @@ class LSJ(Dictionary):
 	def __init__(self, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
 		#Based on Perseus Digital Library
-		self.url = "https://github.com/PerseusDL/lexica/tree/master/CTS_XML_TEI/perseus/pdllex/grc/lsj/*.xml"
+		#self.url = "https://github.com/PerseusDL/lexica/tree/master/CTS_XML_TEI/perseus/pdllex/grc/lsj/*.xml"
 		self.sourcelang = "gr"
 		self.targetlang = "en"
 
 	def install(self):
-		self.download()
+		return self.download()
 
 	def download(self):
-		self.file =  GithubDir("PerseusDL", "lexica", "Files/LSJ", sourcedir = "CTS_XML_TEI/perseus/pdllex/grc/lsj")
-		self.file.download()
-		#Should implement a download for multiple files
+		self.file =  GithubDir("PerseusDL", "lexica", "Files/LSJ", sourceDir = "CTS_XML_TEI/perseus/pdllex/grc/lsj")
+		return self.file.download()
 
 	def convert(self):
 		#since we have the url above, we may not need this stuff

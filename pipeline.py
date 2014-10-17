@@ -7,11 +7,15 @@ from Corpus import dictionaries
 from Corpus import latin
 from Corpus import greek
 
-Dictionaries = {
+LatinDic = {
 	"Calonghi" : latin.Calonghi(),
 	"Gaffiot" : latin.Gaffiot(),
 	"LS" : latin.LS(),
 	"Georges" : latin.Georges(),
+}
+
+GreekDic = {
+	"LSJ" : greek.LSJ()
 }
 
 #Install part
@@ -21,4 +25,4 @@ for dictionaryName in Dictionaries:
 """
 
 LSJ = greek.LSJ()
-LSJ.download()
+print LSJ.install()
