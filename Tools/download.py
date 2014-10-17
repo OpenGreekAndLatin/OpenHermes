@@ -120,10 +120,11 @@ class Github(object):
 		return True
 
 class GithubDir(Github):
-	def __init__(self, user, repository, path, sourceDir):
+	def __init__(self, user, repository, path, sourceDir, branch = "master"):
 		super(self.__class__, self).__init__(user, repository, path)
+		self.branch = branch
 		self.sourceDir = sourceDir
-		self.sourceDir = "{0}-master/{1}".format(self.repository, self.sourceDir)
+		self.sourceDir = "{0}-{1}/{2}".format(self.repository, self.branch, self.sourceDir)
 
 	def download(self):
 		#First step, with get the dir

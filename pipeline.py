@@ -3,9 +3,7 @@
 
 #This file contains the whole algorithm
 
-from Corpus import dictionaries
-from Corpus import latin
-from Corpus import greek
+from Corpus import latin, greek
 
 LatinDic = {
 	"Calonghi" : latin.Calonghi(),
@@ -23,6 +21,9 @@ GreekDic = {
 for dictionaryName in Dictionaries:
 	Dictionaries[dictionaryName].install()
 """
-
+"""
 LSJ = greek.LSJ()
 print LSJ.install()
+"""
+LatinDic["LS"].install()
+print LatinDic["LS"].convert()

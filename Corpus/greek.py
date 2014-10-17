@@ -27,13 +27,6 @@ class LSJ(Dictionary):
 		return self.file.download()
 
 	def convert(self):
-		#since we have the url above, we may not need this stuff
-		#I implemented it for local files
-		#I guess it should be implemented in the download function
-		#but I don't understand exactly what is happening there
-		#orig = askdirectory(title='Where are your original XML lexicon files?')
-		#files = glob('/'.join([orig, '*.xml']))
-
 		tr_dict = defaultdict(list)
 		for file in files:
 			with open(file) as f:
