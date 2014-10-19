@@ -39,7 +39,7 @@ class LS(Dictionary):
 		return self.file.download()
 
 	def convert(self):
-		return self.PerseusTEIConverter()
+		return self.PerseusTEIConverter(architecture = "text")
 
 class Georges(Dictionary):
 	def __init__(self, *args, **kw):

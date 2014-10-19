@@ -10,7 +10,7 @@ import os
 from Tools.download import File
 from Tools.download import Copyrighted
 
-from bs4 import BeautifulSoup as b_soup
+from bs4 import BeautifulSoup
 from collections import defaultdict
 import glob
 
@@ -47,13 +47,21 @@ class Dictionary(object):
 		self.download = File(self.url, "Files", filename)
 		return self.download.check(force=True)
 
-	def htmlEntitiesConverter(self, text):
-		"""
-			Convert htmlEntities such as &ibreve;
-		"""
-		return text
+	def subAttr(self, attributeString, instance):
+		o = instance
+		i = 0
+		attributeList = attributeString.split(".")
+		for attr in attributeList:
+			if hasattr(o, attr):
+				o = getattr(o, attr)
+			else:
+				raise ValueError("This object has no attribute {0}".format(attributeString))
+			i += 1
+			if i == len(attributeList):
+				return o
 
-	def PerseusTEIConverter(self, htmlEntities = False):
+
+	def PerseusTEIConverter(self, architecture = "tr.text"):
 		"""
 			Common method for LS and LSJ as they share the same structure
 		"""
@@ -63,13 +71,12 @@ class Dictionary(object):
 		for file in files:
 			with open(file) as f:
 				text = f.read()
-			soup = b_soup(text)
+			soup = BeautifulSoup(text, "xml")
 			for word in soup.find_all('entryfree'):
-				data[self.htmlEntitiesword.orth.text] = []
 				for s in word.find_all('sense'):
 					try:
-						data[word.orth.text].append(s.tr.text)
+						data[word.orth.text].append(self.subAttr(architecture, s))
 					except Exception as E:
-						print E
+						print( E)
 						continue
 		return data

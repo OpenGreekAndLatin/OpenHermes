@@ -26,4 +26,4 @@ LSJ = greek.LSJ()
 print LSJ.install()
 """
 LatinDic["LS"].install()
-print LatinDic["LS"].convert()
+print (LatinDic["LS"].convert())

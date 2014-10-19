@@ -35,7 +35,7 @@ class File(object):
 			filename = wget.download(self.url, self.path)
 			return True
 		except Exception as E:
-			print E
+			print( E)
 			return False
 
 	def check(self, force = False):
@@ -64,7 +64,7 @@ class File(object):
 					with source, target:
 						shutil.copyfileobj(source, target)
 				except Exception as E:
-					print E
+					print (E)
 					return False
 			return True
 		return False
@@ -85,7 +85,7 @@ class Copyrighted(File):
 			shutil.copyfile(self.origin, self.path)
 			return True
 		except Exception as E:
-			print E
+			print(E)
 			return False
 		
 
