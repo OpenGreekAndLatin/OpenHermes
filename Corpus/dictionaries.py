@@ -13,6 +13,7 @@ from Tools.download import Copyrighted
 from bs4 import BeautifulSoup
 from collections import defaultdict
 import glob
+from pickle import dump
 
 class Dictionary(object):
 	def __init__(self):
@@ -23,16 +24,17 @@ class Dictionary(object):
 	def install(self):
 		raise NotImplementedError("Install is not installed")
 
-	def toDataformat(self, data):
+	def toDataformat(self, dest):
 		"""
 			Should convert to Pickle right now, keeping toDataformat broad...
 		"""
+		dump(self.data, dest)
 		raise NotImplementedError("toDataformat is not implemented")
 
 	def checkConverted(self):
 		raise NotImplementedError("CheckConverted is not implemented")
 
-	def convert(self, force = True):
+	def convert(self, force=True):
 		"""
 			Force parameters should force creating, while normal behaviour should use checkConverted
 			Then it should call self.toPickle
