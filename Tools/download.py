@@ -12,28 +12,30 @@ class File(object):
 		"""
 		Download a file at @url and put it in Software_Root/path/filename
 		"""
-		self.__dir__ = os.path.dirname(os.path.abspath(__file__))
-		self.dir = os.path.abspath(os.path.join(self.__dir__, "../{0}".format(path)))
-		self.path = os.path.join(self.__dir__, "../{0}/{1}".format(path, filename))
+		dir = os.path.dirname(os.path.abspath(__file__))
+		self.dir = os.path.abspath(os.path.join(dir, "../{0}".format(path)))
+		self.path = os.path.join(dir, "../{0}/{1}".format(path, filename))
 		self.path = os.path.abspath(self.path)
 
 		self.filename = filename
 		self.url = url
 		self.mime = mime
 
-	def directory(self):
-		if not os.path.exists(self.dir):
-			return os.makedirs(self.dir)
+	def directory(self, dir = None):
+		if not dir:
+			dir = self.dir
+
+		if not os.path.exists(dir):
+			return os.makedirs(dir)
 		return False
 
 	def download(self):
 		self.directory()
 		try:
 			filename = wget.download(self.url, self.path)
-			#os.rename(os.path.join(self.__dir__, filename), self.path)
 			return True
 		except Exception as E:
-			print(E)
+			print( E)
 			return False
 
 	def check(self, force = False):
@@ -44,13 +46,27 @@ class File(object):
 				return False
 		return True
 
-	def unzip(self):
-		if mime == "zip":
-			try:
-				return True
-			except Exception as E:
-				print E
-				return False
+	def unzip(self, path = None, sourceDir = None):
+		if not path:
+			path = self.path
+		self.directory(path)
+		with zipfile.ZipFile(self.path, 'r') as myzip:
+			filelist = myzip.namelist()
+			if sourceDir:
+				filelist = [f for f in filelist if f.startswith(sourceDir) and not f.endswith("/")]
+			if len(filelist) == 0:
+				raise ValueError("The filelist is empty, nothing to unzip")
+			for filepath in filelist:
+				try:
+					filename = os.path.basename(filepath)
+					source = myzip.open(filepath)
+					target = file(os.path.join(path, filename), "wb")
+					with source, target:
+						shutil.copyfileobj(source, target)
+				except Exception as E:
+					print (E)
+					return False
+			return True
 		return False
 
 
@@ -104,27 +120,14 @@ class Github(object):
 		return True
 
 class GithubDir(Github):
-	def __init__(self, user, repository, path, sourcedir):
+	def __init__(self, user, repository, path, sourceDir, branch = "master"):
 		super(self.__class__, self).__init__(user, repository, path)
-		self.sourcedir = sourcedir
-		self.zipDir = "{0}-master/{1}".format(self.repository, self.sourcedir)
+		self.branch = branch
+		self.sourceDir = sourceDir
+		self.sourceDir = "{0}-{1}/{2}".format(self.repository, self.branch, self.sourceDir)
 
 	def download(self):
 		#First step, with get the dir
 		if self.zip():
-			with zipfile.ZipFile(self.file.path, 'r') as myzip:
-				filelist = myzip.namelist()
-				filelist = [f for f in filelist if f.startswith(self.zipDir) and not f.endswith("/")]
-				for filepath in filelist:
-					try:
-						filename = os.path.basename(filepath)
-						source = myzip.open(filepath)
-						target = file(os.path.join(self.path, filename), "wb")
-						with source, target:
-							shutil.copyfileobj(source, target)
-					except Exception as E:
-						print E
-						continue
-				return True
-			return False
+			return self.file.unzip(path = self.path, sourceDir = self.sourceDir )
 		return False

@@ -3,15 +3,17 @@
 
 #This file contains the whole algorithm
 
-from Corpus import dictionaries
-from Corpus import latin
-from Corpus import greek
+from Corpus import latin, greek
 
-Dictionaries = {
+LatinDic = {
 	"Calonghi" : latin.Calonghi(),
 	"Gaffiot" : latin.Gaffiot(),
 	"LS" : latin.LS(),
 	"Georges" : latin.Georges(),
+}
+
+GreekDic = {
+	"LSJ" : greek.LSJ()
 }
 
 #Install part
@@ -19,6 +21,9 @@ Dictionaries = {
 for dictionaryName in Dictionaries:
 	Dictionaries[dictionaryName].install()
 """
-
+"""
 LSJ = greek.LSJ()
-LSJ.download()
+print LSJ.install()
+"""
+LatinDic["LS"].install()
+print (LatinDic["LS"].convert())
