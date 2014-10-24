@@ -9,3 +9,4 @@ pytz==2014.7
 scikit-learn==0.15.2
 scipy==0.14.0
 six==1.8.0
+wget==2.2
