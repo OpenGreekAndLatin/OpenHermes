@@ -17,13 +17,12 @@ GreekDic = {
 }
 
 #Install part
-"""
-for dictionaryName in Dictionaries:
-	Dictionaries[dictionaryName].install()
-"""
-"""
-LSJ = greek.LSJ()
-print LSJ.install()
-"""
+for dictionaryName in LatinDic:
+	LatinDic[dictionaryName].install()
+
+for dictionaryName in GreekDic:
+	GreekDic[dictionaryName].install()
+
+	
 LatinDic["LS"].install()
 print (LatinDic["LS"].convert())

@@ -45,9 +45,14 @@ class Georges(Dictionary):
 	def __init__(self, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
 		#Based on Biblissima
-		self.url = "http://outils.biblissima.fr/collatinus/ressources/Georges_1913.xml"
+		#self.url = "http://outils.biblissima.fr/collatinus/ressources/Georges_1913.xml"
+		
 		self.sourcelang = "de"
 		self.targetlang = "fr"
+
+	def download(self):
+		self.file =  GithubDir("ponteineptique", "K-E-Georges-1913-TEI", "Files/Georges", sourceDir = "")
+		return self.file.download()
 
 	def install(self):
 		self.download()
