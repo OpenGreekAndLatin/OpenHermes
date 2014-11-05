@@ -36,22 +36,22 @@ class CosineSim(Computation):
 		self.freqdist = {}
 
 	def similarity(self):
-		#scores = p_d(self.whole_df, metric=self.metric)
-		#return pandas.DataFrame(scores,
-		#						index=self.whole_df.index,
-		#						columns=self.whole_df.index)
-		scores = defaultdict(dict)
-		count = 0
-		for w1, w2 in combinations(self.freqdist.keys(), 2):
-			if count % 100000 == 0:
-				print('%s combo at %s' % (count,
-										  datetime.datetime.now().isoformat()))
-			score = p_d(pandas.DataFrame([self.freqdist[w1],
-										  self.freqdist[w2]]).fillna(0),
-						metric=self.metric)
-			scores[w1][w2] = scores[w2][w1] = score
-			count += 1
-		return dict(scores)
+		scores = p_d(self.sparse_df, metric=self.metric)
+		return pandas.DataFrame(scores,
+                                        index=self.sparse_df.index,
+                                        columns=self.sparse_df.index)
+		#scores = defaultdict(dict)
+		#count = 0
+		#for w1, w2 in combinations(self.freqdist.keys(), 2):
+		#	if count % 100000 == 0:
+		#		print('%s combo at %s' % (count,
+		#								  datetime.datetime.now().isoformat()))
+		#	score = p_d(pandas.DataFrame([self.freqdist[w1],
+		#								  self.freqdist[w2]]).fillna(0),
+		#				metric=self.metric)
+		#	scores[w1][w2] = scores[w2][w1] = score
+		#	count += 1
+		#return dict(scores)
 
 	def checkFormat(self):
 		if type(self.data) == pandas.core.frame.DataFrame:
@@ -75,22 +75,8 @@ class CosineSim(Computation):
 				except IndexError as E:
 					self.freqdist[key] = {}
 		#return pandas.DataFrame(freqdist)
-		return self.freqdist
+		#return self.freqdist
 
 	def sparsify(self):
-		#divides self.freqdist into 20 parts and forms a sparse DataFrame
-		#from these parts.  This dividing and reforming are for memory reasons
-		i = self.freqdist.items()
-		l = len(self.freqdist.keys())
-		for x in range(20):
-			small_dict = dict(list(i)[(l//10)*x:(l//10)*(x+1)])
-			if x == 0:
-				self.whole_df = pandas.DataFrame(small_dict)
-				self.whole_df = self.whole_df.fillna(0).to_sparse(fill_value=0)
-			else:
-				part_df = pandas.DataFrame(small_dict)
-				part_df = part_df.fillna(0).to_sparse(fill_value=0)
-				self.whole_df = pandas.concat([self.whole_df, part_df])
-				self.whole_df = self.whole_df.fillna(0).to_sparse(fill_value=0)
-			print(self.whole_df.density)
-		return self.whole_df
+                self.sparse_df = pandas.SparseDataFrame(self.freqdist)
+		#return self.sparse_df
