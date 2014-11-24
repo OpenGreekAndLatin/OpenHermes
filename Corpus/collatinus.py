@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from Corpus.dictionaries import Dictionary
 
-class Collatinus(object):
+class Collatinus(Dictionary):
 	def __init__(self, lang, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
 		self.sourcelang = "la"
