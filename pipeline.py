@@ -46,4 +46,7 @@ for lang in CollatinusDic:
 
 for lang in data:
 	for POS in data[lang]:
-		print( "POS {0} in language {1} has {2} records".format(POS, lang, len(data[lang][POS])))
+		count = 0
+		for translation in data[lang][POS]:
+			count += len(translation)
+		print( "POS {0} in language {1} has {2} records with {3} words in translations".format(POS, lang, len(data[lang][POS]), count))
