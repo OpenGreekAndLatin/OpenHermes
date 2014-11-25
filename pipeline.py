@@ -39,5 +39,11 @@ CollatinusDic = {
 	"pt" : Collatinus("pt")
 }
 
+data = {}
+
 for lang in CollatinusDic:
-	CollatinusDic[lang].convert()
+	data[lang] = CollatinusDic[lang].convert()
+
+for lang in data:
+	for POS in data[lang]:
+		print( "POS {0} in language {1} has {2} records".format(POS, lang, len(data[lang][POS])))
