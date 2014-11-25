@@ -78,5 +78,5 @@ class CosineSim(Computation):
 		#return self.freqdist
 
 	def sparsify(self):
-                self.sparse_df = pandas.SparseDataFrame(self.freqdist)
+		self.sparse_df = pandas.SparseDataFrame(self.freqdist)
 		#return self.sparse_df
