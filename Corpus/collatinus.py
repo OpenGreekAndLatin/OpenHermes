@@ -8,6 +8,7 @@ import os
 import re
 import unicodedata
 from collections import defaultdict
+from nltk.tokenize import RegexpTokenizer
 
 from Corpus.dictionaries import Dictionary
 
@@ -20,6 +21,7 @@ class Collatinus(Dictionary):
 
 		self.latin = self.loadLatin()
 
+		self.tokenizer = RegexpTokenizer(r'\w+')
 
 		#According to document mdlrad.la (Model radical) in collatinus.mdlrad
 		self.flexio = {
@@ -113,11 +115,11 @@ class Collatinus(Dictionary):
 		for line in lines:
 			elements = line.split("|")
 			lemma = self.normalize(elements[0])
-			senses = senseSplitter.split(elements[1])
+			senses = self.tokenizer.tokenize(elements[1])
+			POS = self.getPOS(lemma)
 			for sense in senses:
-				POS = self.getPOS(lemma)
 				if POS in dictionaries:
-					dictionaries[POS][lemma].append(senses)
+					dictionaries[POS][lemma].append(sense)
 					
 		return dictionaries
 
