@@ -48,5 +48,5 @@ for lang in data:
 	for POS in data[lang]:
 		count = 0
 		for translation in data[lang][POS]:
-			count += 1
-		print( "POS {0} in language {1} has {2} records with {3} words in translations".format(POS, lang, len(data[lang][POS]), count))
+			count += len(data[lang][POS][translation])
+		print( "POS {0} in language {1} has {2} records with {3} translations".format(POS, lang, len(data[lang][POS]), count))
