@@ -33,13 +33,17 @@ class CosineSim(Computation):
 	def __init__(self, data):
 		self.data = data
 		self.metric = 'cosine'
-		self.freqdist = {}
+		self.freqdist = defaultdict(dict)
+		self.scores = defaultdict(dict)
 
 	def similarity(self):
-		scores = p_d(self.sparse_df, metric=self.metric)
-		return pandas.DataFrame(scores,
-                                        index=self.sparse_df.index,
-                                        columns=self.sparse_df.index)
+		pos = 'ADJ'
+		for lang in self.freqdist.keys():
+			self.normal_df(self.freqdist[lang][pos])
+			self.scores[lang][pos] = pandas.DataFrame(
+				p_d(self.sparse_df, metric=self.metric),
+				index=self.sparse_df.index,
+				columns=self.sparse_df.index)
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
@@ -63,20 +67,23 @@ class CosineSim(Computation):
 
 	def dictConvert(self):
 		pattern = re.compile(r'[%s]' % (punctuation))
-		for key, senses in self.data.items():
-			if len(senses) > 1:
-				for i, sense in enumerate(senses):
-					sense = re.sub(pattern, '', sense).lower()
-					self.freqdist['-'.join([key, str(i)])] = Counter(sense.split())
-			else:
-				try:
-					sense = re.sub(pattern, '', senses[0]).lower()
-					self.freqdist[key] = Counter(sense.split())
-				except IndexError as E:
-					self.freqdist[key] = {}
-		#return pandas.DataFrame(freqdist)
-		#return self.freqdist
+		for lang, val in self.data.items():
+			for pos, lemma in val.items():
+				for key, senses in lemma.items():
+					if len(senses) > 1:
+						for i, sense in enumerate(senses):
+							sense = re.sub(pattern, ' ', sense).lower()
+							self.freqdist['-'.join([key, str(i)])] = Counter(sense.split())
+					else:
+						try:
+							sense = re.sub(pattern, '', senses[0]).lower()
+							self.freqdist[key] = Counter(sense.split())
+						except IndexError as E:
+							self.freqdist[key] = {}
+
+	def normal_df(self, d):
+		self.df = pandas.DataFrame(d)
 
 	def sparsify(self):
-		self.sparse_df = pandas.SparseDataFrame(self.freqdist)
+		self.df = pandas.SparseDataFrame(self.freqdist)
 		#return self.sparse_df
