@@ -39,11 +39,12 @@ class CosineSim(Computation):
 	def similarity(self):
 		pos = 'ADJ'
 		for lang in self.freqdist.keys():
+			print(lang)
 			self.normal_df(self.freqdist[lang][pos])
 			self.scores[lang][pos] = pandas.DataFrame(
-				p_d(self.sparse_df, metric=self.metric),
-				index=self.sparse_df.index,
-				columns=self.sparse_df.index)
+				p_d(self.df, metric=self.metric),
+				index=self.df.index,
+				columns=self.df.index)
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
@@ -69,20 +70,22 @@ class CosineSim(Computation):
 		pattern = re.compile(r'[%s]' % (punctuation))
 		for lang, val in self.data.items():
 			for pos, lemma in val.items():
+				f_d = {}
 				for key, senses in lemma.items():
 					if len(senses) > 1:
 						for i, sense in enumerate(senses):
 							sense = re.sub(pattern, ' ', sense).lower()
-							self.freqdist['-'.join([key, str(i)])] = Counter(sense.split())
+							f_d['-'.join([key, str(i)])] = Counter(sense.split())
 					else:
 						try:
-							sense = re.sub(pattern, '', senses[0]).lower()
-							self.freqdist[key] = Counter(sense.split())
+							sense = re.sub(pattern, ' ', senses[0]).lower()
+							f_d[key] = Counter(sense.split())
 						except IndexError as E:
-							self.freqdist[key] = {}
+							f_d[key] = {}
+				self.freqdist[lang][pos] = f_d
 
 	def normal_df(self, d):
-		self.df = pandas.DataFrame(d)
+		self.df = pandas.DataFrame(d).fillna(0).T
 
 	def sparsify(self):
 		self.df = pandas.SparseDataFrame(self.freqdist)
