@@ -75,6 +75,8 @@ class Collatinus(Dictionary):
 		raise NotImplementedError("CheckConverted is not implemented")
 
 	def normalize(self, string):
+		if "=" in string:
+			string = string.split("=")[0]
 		sn = unicodedata.normalize('NFKD', string)
 		return ''.join(x for x in sn if unicodedata.category(x)[0] == 'L')
 
@@ -87,8 +89,6 @@ class Collatinus(Dictionary):
 		for line in lines:
 			elements = line.split("|")
 			lemma = elements[0]
-			if "=" in lemma:
-				lemma = lemma.split("=")[0]
 			lemma = self.normalize(lemma)
 			data[lemma] = elements[1]
 
@@ -115,11 +115,10 @@ class Collatinus(Dictionary):
 		for line in lines:
 			elements = line.split("|")
 			lemma = self.normalize(elements[0])
-			senses = self.tokenizer.tokenize(elements[1])
+			senses = elements[1]
 			POS = self.getPOS(lemma)
-			for sense in senses:
-				if POS in dictionaries:
-					dictionaries[POS][lemma].append(sense)
+			if POS in dictionaries:
+				dictionaries[POS][lemma].append(senses)
 					
 		return dictionaries
 
