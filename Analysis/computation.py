@@ -50,7 +50,8 @@ class CosineSim(Computation):
 				try:
 					self.average[pos] = (self.average[pos] + self.scores[lang][pos]).fillna(1)
 				except:
-					self.average[pos] = self.scores[lang][pos]
+					self.average[pos] = self.scores[lang][pos].fillna(1)
+			self.average[pos] = self.average[pos]/7
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
