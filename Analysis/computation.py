@@ -48,9 +48,9 @@ class CosineSim(Computation):
 					index=self.df.index,
 					columns=self.df.index)
 				try:
-					self.average[pos] = (self.average[pos] + self.scores[lang][pos]).fillna(1)
+					self.average[pos] = (self.average[pos] + self.scores[lang][pos])
 				except:
-					self.average[pos] = self.scores[lang][pos].fillna(1)
+					self.average[pos] = self.scores[lang][pos]
 			self.average[pos] = self.average[pos]/7
 		#scores = defaultdict(dict)
 		#count = 0
