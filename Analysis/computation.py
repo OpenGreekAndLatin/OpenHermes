@@ -83,15 +83,19 @@ class CosineSim(Computation):
 						#for i, sense in enumerate(senses):
 						#	sense = re.sub(pattern, ' ', sense).lower()
 						#	f_d['-'.join([key, str(i)])] = Counter(sense.split())
-						sense = ' '.join(senses)
+						senses = ' '.join(senses)
+					else:
+						senses = senses[0]
 					#else:
 					#	try:
 					#		sense = re.sub(pattern, ' ', senses[0]).lower()
 					#		f_d[key] = Counter(sense.split())
 					#	except IndexError as E:
 					#		f_d[key] = {}
+					if type(senses) == list:
+						raise TypeError('senses cannot be a list')
 					try:
-						sense = re.sub(pattern, ' ', senses[0]).lower()
+						sense = re.sub(pattern, ' ', senses).lower()
 						f_d[key] = Counter(sense.split())
 					except IndexError as E:
 						f_d[key] = {}
