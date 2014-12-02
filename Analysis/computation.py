@@ -33,13 +33,25 @@ class CosineSim(Computation):
 	def __init__(self, data):
 		self.data = data
 		self.metric = 'cosine'
-		self.freqdist = {}
+		self.freqdist = defaultdict(dict)
+		self.scores = defaultdict(dict)
+		self.average = {}
 
 	def similarity(self):
-		scores = p_d(self.sparse_df, metric=self.metric)
-		return pandas.DataFrame(scores,
-                                        index=self.sparse_df.index,
-                                        columns=self.sparse_df.index)
+		pos_list = ['ADJ', 'V', 'N']
+		for pos in pos_list:
+			for lang in self.freqdist.keys():
+				print(lang)
+				self.normal_df(self.freqdist[lang][pos])
+				self.scores[lang][pos] = pandas.DataFrame(
+					p_d(self.df, metric=self.metric),
+					index=self.df.index,
+					columns=self.df.index)
+				try:
+					self.average[pos] = (self.average[pos] + self.scores[lang][pos])
+				except:
+					self.average[pos] = self.scores[lang][pos]
+			self.average[pos] = self.average[pos]/7
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
@@ -63,20 +75,35 @@ class CosineSim(Computation):
 
 	def dictConvert(self):
 		pattern = re.compile(r'[%s]' % (punctuation))
-		for key, senses in self.data.items():
-			if len(senses) > 1:
-				for i, sense in enumerate(senses):
-					sense = re.sub(pattern, '', sense).lower()
-					self.freqdist['-'.join([key, str(i)])] = Counter(sense.split())
-			else:
-				try:
-					sense = re.sub(pattern, '', senses[0]).lower()
-					self.freqdist[key] = Counter(sense.split())
-				except IndexError as E:
-					self.freqdist[key] = {}
-		#return pandas.DataFrame(freqdist)
-		#return self.freqdist
+		for lang, val in self.data.items():
+			for pos, lemma in val.items():
+				f_d = {}
+				for key, senses in lemma.items():
+					if len(senses) > 1:
+						#for i, sense in enumerate(senses):
+						#	sense = re.sub(pattern, ' ', sense).lower()
+						#	f_d['-'.join([key, str(i)])] = Counter(sense.split())
+						senses = ' '.join(senses)
+					else:
+						senses = senses[0]
+					#else:
+					#	try:
+					#		sense = re.sub(pattern, ' ', senses[0]).lower()
+					#		f_d[key] = Counter(sense.split())
+					#	except IndexError as E:
+					#		f_d[key] = {}
+					if type(senses) == list:
+						raise TypeError('senses cannot be a list')
+					try:
+						sense = re.sub(pattern, ' ', senses).lower()
+						f_d[key] = Counter(sense.split())
+					except IndexError as E:
+						f_d[key] = {}
+				self.freqdist[lang][pos] = f_d
+
+	def normal_df(self, d):
+		self.df = pandas.DataFrame(d).fillna(0).T
 
 	def sparsify(self):
-		self.sparse_df = pandas.SparseDataFrame(self.freqdist)
+		self.df = pandas.SparseDataFrame(self.freqdist)
 		#return self.sparse_df
