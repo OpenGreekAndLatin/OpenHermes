@@ -60,3 +60,4 @@ target/
 # Particular to this project
 Files/*
 Results/*
+Cache/*

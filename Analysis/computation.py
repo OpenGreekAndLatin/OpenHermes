@@ -37,21 +37,23 @@ class CosineSim(Computation):
 		self.scores = defaultdict(dict)
 		self.average = {}
 
-	def similarity(self):
-		pos_list = ['ADJ', 'V', 'N']
+	def similarity(self, POS = ['ADJ', 'V', 'N']):
+		pos_list = POS
 		for pos in pos_list:
 			for lang in self.freqdist.keys():
-				print(lang)
-				self.normal_df(self.freqdist[lang][pos])
-				self.scores[lang][pos] = pandas.DataFrame(
-					p_d(self.df, metric=self.metric),
-					index=self.df.index,
-					columns=self.df.index)
-				try:
-					self.average[pos] = (self.average[pos] + self.scores[lang][pos])
-				except:
-					self.average[pos] = self.scores[lang][pos]
-			self.average[pos] = self.average[pos]/7
+				if pos in self.freqdist[lang].keys():
+					print("Computing on {0} / POS {1} ".format(lang, pos))
+					self.normal_df(self.freqdist[lang][pos])
+					self.scores[lang][pos] = pandas.DataFrame(
+						p_d(self.df, metric=self.metric),
+						index=self.df.index,
+						columns=self.df.index)
+					try:
+						self.average[pos] = (self.average[pos] + self.scores[lang][pos])
+					except:
+						self.average[pos] = self.scores[lang][pos]
+			if pos in self.average.keys():
+				self.average[pos] = self.average[pos] / len(self.data)
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
