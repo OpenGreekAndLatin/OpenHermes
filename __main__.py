@@ -44,13 +44,14 @@ AvailableAlgorythm = [
 if __name__ == "__main__":
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:],"hc:",["corpus=", "help", "algorythm="])
+		opts, args = getopt.getopt(sys.argv[1:],"hc:",["corpus=", "help", "algorythm=", "force="])
 	except getopt.GetoptError:
 		opts = []
 
 	corpus = None
 	algorythm = AvailableAlgorythm[0][1]
 	algorythmString = AvailableAlgorythm[0][0]
+	force = False
 
 	for o in opts:
 		if o[0] in ["h", "--help"]:
@@ -58,7 +59,8 @@ if __name__ == "__main__":
 
 {3}Commands:{1}
 {2}--corpus= , c{1}\t Define the corpus
-{2}--algorythm= , a{1}\t Define the algorythm you're using""".format(color.DARKCYAN, color.END, color.BLUE, color.UNDERLINE))
+{2}--algorythm= , a{1}\t Define the algorythm you're using
+{2}--force=0{1}\t Force the reconstruction of the cache. --force=1 means you reconstruct. Default 0""".format(color.DARKCYAN, color.END, color.BLUE, color.UNDERLINE))
 
 			print ("\n{0}Corpora:{1}".format(color.UNDERLINE, color.END))
 			i = 0
@@ -72,6 +74,11 @@ if __name__ == "__main__":
 				print ("{0}\t {1} \t\te.g. {4}--algorythm={2}, -a {3}, -a {2}{5}".format(color.BLUE + algo[0] + color.END, algo[2], algo[0], i, color.DARKCYAN, color.END))
 				i += 1
 			sys.exit()
+		if o[0] in ["--force"]:
+			if o[1].isdigit():
+				z = int(o[1])
+				if z == 1:
+					force = True
 		if o[0] in ["c", "--corpus"]:
 			if o[1].isdigit():
 				z = int(o[1])
@@ -104,7 +111,7 @@ if corpus == None:
 corpusObj = corpus[1]
 data = {}
 for lang in corpusObj:
-	data[lang] = corpusObj[lang].convert()
+	data[lang] = corpusObj[lang].convert(force = force)
 
 inst = algorythm(data)
 inst.dictConvert()
