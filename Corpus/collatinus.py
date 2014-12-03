@@ -67,6 +67,8 @@ class Collatinus(Dictionary):
 			"104" : "Greek",
 			"105" : "Greek"
 		}
+		
+		self.getPath(self.__class__.__name__)
 
 	def install(self):
 		raise NotImplementedError("Install is not installed")
@@ -102,7 +104,7 @@ class Collatinus(Dictionary):
 				return self.flexio[flexioNumber]
 		return "Unknown"
 
-	def convert(self, force=True):
+	def callback(self, force=False):
 		dictionaries = {
 			"V" : defaultdict(list),
 			"N" : defaultdict(list),
@@ -124,5 +126,8 @@ class Collatinus(Dictionary):
 						dictionaries[POS][lemma].append(sense)
 					
 		return dictionaries
+
+	def convert(self, force = False):
+		return self._convert(force = force, callback = self.callback)
 
 

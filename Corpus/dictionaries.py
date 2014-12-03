@@ -10,36 +10,56 @@ import os
 from Tools.download import File
 from Tools.download import Copyrighted
 
-from bs4 import BeautifulSoup
+import xml.etree.cElementTree as cElementTree
 from collections import defaultdict
 import glob
-from pickle import dump
+import pickle
 
 class Dictionary(object):
 	def __init__(self):
 		self.sourcelang = None
 		self.targetlang = None
 		self.url = None
+		self.data = {}
+
+	def getPath(self, className):
+		self.path = "./Cache/{0}-{1}-{2}.pickle".format(className, self.sourcelang, self.targetlang)
+		return self.path
 
 	def install(self):
 		raise NotImplementedError("Install is not installed")
 
-	def toDataformat(self, dest):
+	def load(self):
+		"""
+			Should read and import data from pickle
+		"""
+		try:
+			with open(self.path) as f:
+				self.data = pickle.load(f)
+			return True
+		except:
+			return False
+		return False
+
+	def dump(self):
 		"""
 			Should convert to Pickle right now, keeping toDataformat broad...
 		"""
-		dump(self.data, dest)
-		raise NotImplementedError("toDataformat is not implemented")
+		with open(self.path, "wb") as f:
+			pickle.dump(self.data, f)
+		return True
 
 	def checkConverted(self):
 		raise NotImplementedError("CheckConverted is not implemented")
 
-	def convert(self, force=True):
+	def convert(self, fn = False, force=True):
 		"""
 			Force parameters should force creating, while normal behaviour should use checkConverted
 			Then it should call self.toPickle
 		"""
 		raise NotImplementedError("Convert is not implemented")
+		if force:
+			pass
 
 	def search(self):
 		raise NotImplementedError("Install is not installed")
@@ -62,23 +82,18 @@ class Dictionary(object):
 			if i == len(attributeList):
 				return o
 
+	def _convert(self, force = False, callback = None):
+		load = self.load()
+		if force == True or load == False:
+			callback()
+			self.dump()
+		return self.data
 
-	def PerseusTEIConverter(self, architecture = "tr.text"):
+
+	def PerseusTEIConverter(self, architecture = "tr.text", POS = {}):
 		"""
 			Common method for LS and LSJ as they share the same structure
 		"""
-		#I think we should move from BS to something else...
-		files = glob.glob('/'.join([self.file.path, '*.xml']))
-		data = defaultdict(list)
-		for file in files:
-			with open(file) as f:
-				text = f.read()
-			soup = BeautifulSoup(text, "xml")
-			for word in soup.find_all('entryfree'):
-				for s in word.find_all('sense'):
-					try:
-						data[word.orth.text].append(self.subAttr(architecture, s))
-					except Exception as E:
-						print( E)
-						continue
+		raise NotImplementedError("Convert is not implemented")
+		self.data = data
 		return data

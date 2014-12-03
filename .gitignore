@@ -60,3 +60,5 @@ target/
 # Particular to this project
 Files/*
 Results/*
+Cache/*
+Cache/LSJ-gr-en.pickle
