@@ -5,6 +5,7 @@
 
 from Corpus import latin, greek
 from Corpus.collatinus import Collatinus
+from Analysis import computation
 
 """
 LatinDic = {
@@ -50,3 +51,10 @@ for lang in data:
 		for translation in data[lang][POS]:
 			count += len(data[lang][POS][translation])
 		print( "POS {0} in language {1} has {2} records with {3} translations".format(POS, lang, len(data[lang][POS]), count))
+
+
+inst = computation.CosineSim(data)
+inst.dictConvert()
+inst.similarity()
+for POS in inst.average:
+	inst.average[POS].to_csv('Results/OGL_%s_average.csv' % (POS))
