@@ -11,6 +11,7 @@ from Tools.download import GithubDir
 import xml.etree.cElementTree as cElementTree
 from collections import defaultdict
 import glob
+import re
 
 class LSJ(Dictionary):
 	def __init__(self, *args, **kw):
@@ -37,6 +38,8 @@ class LSJ(Dictionary):
 		files = glob.glob('/'.join([self.file.path, '*.xml']))
 		data = {}
 
+		space_remover = re.compile("([\s]+)")
+
 		for pos in POS:
 			data[POS[pos]] = defaultdict(list)
 
@@ -48,7 +51,7 @@ class LSJ(Dictionary):
 			for word in root.findall('.//entryFree'):
 				pos = word.find("./pos[@TEIform='pos']")
 				if cElementTree.iselement(pos):
-					pos_text = pos.text
+					pos_text = space_remover.sub("", pos.text)
 					if pos_text in POS:
 						pos = POS[pos_text]
 						orth = word.find("./orth").text
