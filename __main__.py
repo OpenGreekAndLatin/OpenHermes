@@ -61,6 +61,9 @@ class OpenSynonyms(object):
 			path = self.path + "/Cache/"
 		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.name)
 
+		if not os.path.isfile(path):
+			return False
+			
 		with open(path, "rb") as f:
 			self.results = pickle.load(f)
 			return self.results
