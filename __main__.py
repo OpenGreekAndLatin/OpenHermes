@@ -28,7 +28,7 @@ class OpenSynonyms(object):
 		found_subset = found[0:10]
 		heads = found_subset.keys().tolist()
 		found_subset = found_subset.tolist()
-		
+
 		return list(zip(heads, found_subset))
 
 	def checkCacheAnalyse(self):
@@ -223,7 +223,10 @@ if __name__ == "__main__":
 
 	if type(search) == tuple:
 		results = instance.search(POS = search[0], lemma = search[1])
-		print (results)
+		print ("{1}Score{0}\t\t\t{2}Lemma{0}".format(color.END, color.DARKCYAN, color.BLUE))
+		print ("{1}----------------------{0}".format(color.END, color.RED))
+		for result in results:
+			print ("{1}{3}{0}\t{2}{4}{0}".format(color.END, color.DARKCYAN, color.BLUE, result[1], result[0]))
 
 	if export == "csv":
 		instance.to_csv(debug = True)
