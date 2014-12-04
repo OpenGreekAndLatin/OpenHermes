@@ -12,6 +12,11 @@ import xml.etree.cElementTree as cElementTree
 from collections import defaultdict
 import glob
 import re
+import pickle
+import os
+import xml
+
+from Tools.download import File
 
 class LSJ(Dictionary):
 	def __init__(self, *args, **kw):
@@ -21,7 +26,7 @@ class LSJ(Dictionary):
 		self.sourcelang = "gr"
 		self.targetlang = "en"
 		self.file =  GithubDir("PerseusDL", "lexica", "Files/LSJ", sourceDir = "CTS_XML_TEI/perseus/pdllex/grc/lsj")
-
+		self.posDict = None
 		self.getPath(self.__class__.__name__)
 
 	def install(self):
@@ -29,6 +34,45 @@ class LSJ(Dictionary):
 
 	def download(self):
 		return self.file.download()
+
+	def installPOS(self):
+		#Checking / downloading the file
+		path = os.path.dirname(os.path.abspath(__file__))
+		greekMorph = File(url = "https://github.com/jfinkels/hopper/raw/master/xml/data/greek.morph.xml", path = "Cache", filename= "greek.morph.xml")
+		print(greekMorph.check(force = True))
+		print(greekMorph.path)
+		#Parsing it
+		data = {}
+		for event, elem in xml.etree.cElementTree.iterparse(greekMorph.path):
+			if elem.tag == "analysis":
+				lemma = {}
+				for child in elem:
+					if child.tag == "lemma":
+						lemma["lemma_morph"] = child.text
+					elif child.tag == "pos":
+						lemma["pos"] = child.text
+				data[lemma["lemma_morph"]] = lemma["pos"]
+
+		with open(path + "/../Cache/greek.betacode.pos.pickle", "wb") as f:
+			pickle.dump(data, f)
+		return data
+
+	def readPOS(self):
+		path = os.path.dirname(os.path.abspath(__file__))
+		try:
+			with open(path + "/../Cache/greek.betacode.pos.pickle", "rb") as f:
+				return pickle.load(f)
+		except:
+			return self.installPOS()
+
+
+	def getPOS(self, lemma):
+		if self.posDict == None:
+			self.posDict = self.readPOS()
+		if lemma in self.posDict:
+			return self.posDict[lemma]
+		return "Unknown"
+
 
 	def TEIConverter(self, POS):
 		"""
@@ -49,23 +93,22 @@ class LSJ(Dictionary):
 			tree = cElementTree.parse(file)
 			root = tree.getroot()
 			for word in root.findall('.//entryFree'):
-				pos = word.find("./pos[@TEIform='pos']")
-				if cElementTree.iselement(pos):
-					pos_text = space_remover.sub("", pos.text)
-					if pos_text in POS:
-						pos = POS[pos_text]
-						orth = word.find("./orth").text
-						senses = word.findall('./sense/tr')
-						text = " ".join([s.text for s in senses])
-						data[pos][orth].append(text)
+				orth = word.find("./orth").text
+				pos_text = self.getPOS(orth)
+				if pos_text in POS:
+					pos = POS[pos_text]
+					senses = word.findall('./sense/tr')
+					text = " ".join([s.text for s in senses])
+					data[pos][orth].append(text)
 		self.data = data
 		return data
 
 	def callback(self):
 		return self.TEIConverter(
 			POS = {
-				"Adj." : "ADJ",
-				"Subst." : "N"
+				"adj" : "ADJ",
+				"noun" : "N",
+				"verb" : "V"
 			}
 		)
 
