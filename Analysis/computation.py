@@ -52,20 +52,11 @@ class CosineSim(Computation):
 						self.average[pos] = (self.average[pos] + self.scores[lang][pos])
 					except:
 						self.average[pos] = self.scores[lang][pos]
+						
 			if pos in self.average.keys():
 				self.average[pos] = self.average[pos] / len(self.data)
-		#scores = defaultdict(dict)
-		#count = 0
-		#for w1, w2 in combinations(self.freqdist.keys(), 2):
-		#	if count % 100000 == 0:
-		#		print('%s combo at %s' % (count,
-		#								  datetime.datetime.now().isoformat()))
-		#	score = p_d(pandas.DataFrame([self.freqdist[w1],
-		#								  self.freqdist[w2]]).fillna(0),
-		#				metric=self.metric)
-		#	scores[w1][w2] = scores[w2][w1] = score
-		#	count += 1
-		#return dict(scores)
+
+		return self.average
 
 	def checkFormat(self):
 		if type(self.data) == pandas.core.frame.DataFrame:
@@ -82,18 +73,9 @@ class CosineSim(Computation):
 				f_d = {}
 				for key, senses in lemma.items():
 					if len(senses) > 1:
-						#for i, sense in enumerate(senses):
-						#	sense = re.sub(pattern, ' ', sense).lower()
-						#	f_d['-'.join([key, str(i)])] = Counter(sense.split())
 						senses = ' '.join(senses)
 					else:
 						senses = senses[0]
-					#else:
-					#	try:
-					#		sense = re.sub(pattern, ' ', senses[0]).lower()
-					#		f_d[key] = Counter(sense.split())
-					#	except IndexError as E:
-					#		f_d[key] = {}
 					if type(senses) == list:
 						raise TypeError('senses cannot be a list')
 					try:
@@ -105,7 +87,8 @@ class CosineSim(Computation):
 
 	def normal_df(self, d):
 		self.df = pandas.DataFrame(d).fillna(0).T
+		return self.df
 
 	def sparsify(self):
 		self.df = pandas.SparseDataFrame(self.freqdist)
-		#return self.sparse_df
+		return self.df

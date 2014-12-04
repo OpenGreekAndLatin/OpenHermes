@@ -15,6 +15,7 @@ from collections import defaultdict
 import glob
 import pickle
 
+
 class Dictionary(object):
 	def __init__(self):
 		self.sourcelang = None
@@ -23,7 +24,7 @@ class Dictionary(object):
 		self.data = {}
 
 	def getPath(self, className):
-		self.path = "./Cache/{0}-{1}-{2}.pickle".format(className, self.sourcelang, self.targetlang)
+		self.path = os.path.dirname(os.path.abspath(__file__)) + "/../Cache/{0}-{1}-{2}.pickle".format(className, self.sourcelang, self.targetlang)
 		return self.path
 
 	def install(self):
@@ -33,12 +34,10 @@ class Dictionary(object):
 		"""
 			Should read and import data from pickle
 		"""
-		try:
-			with open(self.path) as f:
+		if os.path.isfile(self.path):
+			with open(self.path, "rb") as f:
 				self.data = pickle.load(f)
-			return True
-		except:
-			return False
+				return self.data
 		return False
 
 	def dump(self):
@@ -85,7 +84,7 @@ class Dictionary(object):
 	def _convert(self, force = False, callback = None):
 		load = self.load()
 		if force == True or load == False:
-			callback()
+			self.data = callback()
 			self.dump()
 		return self.data
 
