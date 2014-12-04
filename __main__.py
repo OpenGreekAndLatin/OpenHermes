@@ -25,7 +25,7 @@ class OpenSynonyms(object):
 		found = df.sort(lemma, ascending=True)
 		found = found[lemma]
 
-		found_subset = found[0:10]
+		found_subset = found[1:10]
 		heads = found_subset.keys().tolist()
 		found_subset = found_subset.tolist()
 
