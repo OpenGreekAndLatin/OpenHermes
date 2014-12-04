@@ -3,6 +3,75 @@
 
 import getopt
 import sys
+import os
+
+
+class OpenSynonyms(object):
+	def __init__(self, corpus, algorythm, name = "OpenSynonyms"):
+		self.corpus = corpus
+		self.algorythm = algorythm
+
+		self.path = os.path.dirname(os.path.abspath(__file__))
+
+		self.name = name
+
+	def checkCacheAnalyse(self):
+		return False
+
+	def generate(self, force = False):
+		""" Read and Generate the dictionaries """
+		data = {}
+		for lang in self.corpus:
+			data[lang] = self.corpus[lang].convert(force = force)
+		self.data = data
+		return data
+
+	def analyse(self, force = False, debug = False):
+		""" Run the algorythm on the corpus """
+
+		inst = algorythm(self.data)
+		inst.dictConvert()
+		inst.similarity()
+
+		self.results = inst.average
+		self.instance = inst
+
+		self.to_pickle(debug = debug)
+		return inst.average
+
+	def from_pickle(self, path = None, debug = False):
+		pass
+
+	def to_pickle(self, path = None, debug = False):
+		for POS in self.results:
+			if not path:
+				path = self.path + "Cache/"
+			path = "{0}OGL_{1}_{2}_{3}_average.pickle".format(POS, self.algorythm.__name__, self.name)
+
+			self.results[POS].to_pickle(path)
+			if debug == true:
+				print ("Results saved to {0}".format(path))
+
+
+	def to_csv(self, path = None, debug = False):
+
+		for POS in self.results:
+			if not path:
+				path = self.path + "Results/"
+
+			path = "{0}OGL_{1}_{2}_{3}_average.csv".format(POS, self.algorythm.__name__, self.name)
+
+			self.results[POS].to_csv(path)
+			if debug == true:
+				print ("Results saved to {0}".format(path))
+
+#############################################################################################
+#
+#
+#	Commandline part
+#
+#
+#############################################################################################
 
 from Corpus import latin, greek
 from Corpus.collatinus import Collatinus
@@ -102,24 +171,15 @@ if __name__ == "__main__":
 					print("Unknown algorythm")
 					sys.exit()
 
-if corpus == None:
-	print("Unknown Corpus")
-	sys.exit()
+	if corpus == None:
+		print("Unknown Corpus")
+		sys.exit()
 
-
-
-corpusObj = corpus[1]
-data = {}
-for lang in corpusObj:
-	data[lang] = corpusObj[lang].convert(force = force)
-
-inst = algorythm(data)
-inst.dictConvert()
-
-for dic in inst.data:
-	for key in inst.data[dic]:
-		print(key)
-inst.similarity()
-for POS in inst.average:
-	inst.average[POS].to_csv("Results/OGL_{0}_{1}_{2}_average.csv".format(POS, algorythmString, corpus[0]))
-	print ("Results saved to Results/OGL_{0}_{1}_{2}_average.csv".format(POS, algorythmString, corpus[0]))
+	instance = OpenSynonyms(
+			corpus = corpus[1],
+			algorythm = algorythm,
+			name = corpus[0]
+		)
+	instance.generate()
+	instance.analyse()
+	instance.to_csv(debug = True)

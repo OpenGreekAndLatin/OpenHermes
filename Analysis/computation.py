@@ -52,8 +52,11 @@ class CosineSim(Computation):
 						self.average[pos] = (self.average[pos] + self.scores[lang][pos])
 					except:
 						self.average[pos] = self.scores[lang][pos]
+						
 			if pos in self.average.keys():
 				self.average[pos] = self.average[pos] / len(self.data)
+
+		return self.average
 		#scores = defaultdict(dict)
 		#count = 0
 		#for w1, w2 in combinations(self.freqdist.keys(), 2):
