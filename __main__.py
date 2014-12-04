@@ -4,13 +4,13 @@
 import getopt
 import sys
 import os
+import pickle
 
 
 class OpenSynonyms(object):
 	def __init__(self, corpus, algorythm, name = "OpenSynonyms"):
 		self.corpus = corpus
 		self.algorythm = algorythm
-
 		self.path = os.path.dirname(os.path.abspath(__file__))
 
 		self.name = name
@@ -26,43 +26,51 @@ class OpenSynonyms(object):
 		self.data = data
 		return data
 
-	def analyse(self, force = False, debug = False):
+	def analyse(self, force = False, debug = False, path = None):
+		if self.from_pickle(path):
+			return self.results
+
 		""" Run the algorythm on the corpus """
+		self.instance = self.algorythm(self.data)
+		self.instance.dictConvert()
+		self.instance.similarity()
 
-		inst = algorythm(self.data)
-		inst.dictConvert()
-		inst.similarity()
+		self.results = self.instance.average
 
-		self.results = inst.average
-		self.instance = inst
-
-		self.to_pickle(debug = debug)
-		return inst.average
+		self.to_pickle(debug = debug, path = path)
+		return self.results 
 
 	def from_pickle(self, path = None, debug = False):
-		pass
+		if not path:
+			path = self.path + "/Cache/"
+		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.name)
+
+		with open(path, "rb") as f:
+			self.results = pickle.load(f)
+			return self.results
+		return False
 
 	def to_pickle(self, path = None, debug = False):
-		for POS in self.results:
-			if not path:
-				path = self.path + "Cache/"
-			path = "{0}OGL_{1}_{2}_{3}_average.pickle".format(POS, self.algorythm.__name__, self.name)
+		if not path:
+			path = self.path + "/Cache/"
+		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.name)
 
-			self.results[POS].to_pickle(path)
-			if debug == true:
-				print ("Results saved to {0}".format(path))
+		with open(path, "wb") as f:
+			pickle.dump(self.results, f)
+
+		if debug == True:
+			print ("Results saved to {0}".format(path))
 
 
 	def to_csv(self, path = None, debug = False):
-
 		for POS in self.results:
 			if not path:
-				path = self.path + "Results/"
+				path = self.path + "/Results/"
 
-			path = "{0}OGL_{1}_{2}_{3}_average.csv".format(POS, self.algorythm.__name__, self.name)
+			path = "{0}OGL_{1}_{2}_{3}_average.csv".format(path, POS, self.algorythm.__name__, self.name)
 
 			self.results[POS].to_csv(path)
-			if debug == true:
+			if debug == True:
 				print ("Results saved to {0}".format(path))
 
 #############################################################################################
@@ -181,5 +189,5 @@ if __name__ == "__main__":
 			name = corpus[0]
 		)
 	instance.generate()
-	instance.analyse()
+	instance.analyse(debug = True)
 	instance.to_csv(debug = True)

@@ -37,7 +37,7 @@ class Dictionary(object):
 		if os.path.isfile(self.path):
 			with open(self.path, "rb") as f:
 				self.data = pickle.load(f)
-			return True
+				return self.data
 		return False
 
 	def dump(self):
@@ -84,7 +84,7 @@ class Dictionary(object):
 	def _convert(self, force = False, callback = None):
 		load = self.load()
 		if force == True or load == False:
-			callback()
+			self.data = callback()
 			self.dump()
 		return self.data
 

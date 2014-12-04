@@ -114,16 +114,16 @@ class Collatinus(Dictionary):
 		with open(self.root + "lemmata.{0}".format(self.targetlang)) as f:
 			lines = [line for line in f.read().split("\n") if len(line)>0 and not line[0] == "!"]
 		
-		for line in lines:
-			elements = line.split("|")
-			lemma = self.normalize(elements[0])
-			senses = elements[1]
-			senses = senseSplitter.split(senses)
-			POS = self.getPOS(lemma)
-			if POS in dictionaries:
-				for sense in senses:
-					if len(sense) > 0:
-						dictionaries[POS][lemma].append(sense)
+			for line in lines:
+				elements = line.split("|")
+				lemma = self.normalize(elements[0])
+				senses = elements[1]
+				senses = senseSplitter.split(senses)
+				POS = self.getPOS(lemma)
+				if POS in dictionaries:
+					for sense in senses:
+						if len(sense) > 0:
+							dictionaries[POS][lemma].append(sense)
 					
 		return dictionaries
 
