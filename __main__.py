@@ -15,6 +15,22 @@ class OpenSynonyms(object):
 
 		self.name = name
 
+	def search(self, POS = "N", lemma = "bonus"):
+		if not self.results:
+			self.analyse()
+		if POS not in self.results:
+			raise ValueError("This PartOfSpeach is not available in this Corpus")
+
+		df = self.results[POS]
+		found = df.sort(lemma, ascending=True)
+		found = found[lemma]
+
+		found_subset = found[0:10]
+		heads = found_subset.keys().tolist()
+		found_subset = found_subset.tolist()
+		
+		return list(zip(heads, found_subset))
+
 	def checkCacheAnalyse(self):
 		return False
 
@@ -121,7 +137,7 @@ AvailableAlgorythm = [
 if __name__ == "__main__":
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:],"hc:",["corpus=", "help", "algorythm=", "force="])
+		opts, args = getopt.getopt(sys.argv[1:],"hc:",["corpus=", "help", "algorythm=", "force=", "csv", "csv=", "search="])
 	except getopt.GetoptError:
 		opts = []
 
@@ -129,6 +145,8 @@ if __name__ == "__main__":
 	algorythm = AvailableAlgorythm[0][1]
 	algorythmString = AvailableAlgorythm[0][0]
 	force = False
+	export = None
+	search = None
 
 	for o in opts:
 		if o[0] in ["h", "--help"]:
@@ -137,6 +155,8 @@ if __name__ == "__main__":
 {3}Commands:{1}
 {2}--corpus= , c{1}\t Define the corpus
 {2}--algorythm= , a{1}\t Define the algorythm you're using
+{2}--search=POS,{1}\t Search for synonyms given. Parameter is using format PartOfSpeach,lemma
+{2}--csv,--csv=path {1}\t Export results to csv. If --csv=path, then exporting to given path
 {2}--force=0{1}\t Force the reconstruction of the cache. --force=1 means you reconstruct. Default 0""".format(color.DARKCYAN, color.END, color.BLUE, color.UNDERLINE))
 
 			print ("\n{0}Corpora:{1}".format(color.UNDERLINE, color.END))
@@ -165,7 +185,7 @@ if __name__ == "__main__":
 				match = [group for group in AvailableCorpus if group[0] == o[1]]
 				if len(match) == 1:
 					corpus = match[0]
-		if o[0] in ["a", "--algorythm="]:
+		if o[0] in ["a", "--algorythm"]:
 			if o[1].isdigit():
 				z = int(o[1])
 				if len(AvailableAlgorythm) - 1 > z:
@@ -179,6 +199,16 @@ if __name__ == "__main__":
 					print("Unknown algorythm")
 					sys.exit()
 
+		if o[0] in ["--csv"]:
+			export = "csv"
+			path = None
+			if len(o[1]) > 0:
+				path = o[1]
+
+		if o[0] in ["--search"]:
+			r = o[1].split(",")
+			search = (r[0], "".join(r[1:]))
+
 	if corpus == None:
 		print("Unknown Corpus")
 		sys.exit()
@@ -190,4 +220,10 @@ if __name__ == "__main__":
 		)
 	instance.generate()
 	instance.analyse(debug = True)
-	instance.to_csv(debug = True)
+
+	if type(search) == tuple:
+		results = instance.search(POS = search[0], lemma = search[1])
+		print (results)
+
+	if export == "csv":
+		instance.to_csv(debug = True)
