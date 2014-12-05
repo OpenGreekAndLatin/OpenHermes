@@ -23,7 +23,7 @@ class OpenSynonyms(object):
 
 		df = self.results[POS]
 		found = df.sort(lemma, ascending=True)
-		found = found[lemma]
+		found = found[lemma].dropna()
 
 		found_subset = found[1:10]
 		heads = found_subset.keys().tolist()
