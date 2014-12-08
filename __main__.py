@@ -134,7 +134,8 @@ AvailableCorpus = [
 ]
 
 AvailableAlgorythm = [
-	["CosineSim", computation.CosineSim, "A Cosine similarity algorythm"]
+	["CosineSim", computation.CosineSim, "A Cosine similarity algorythm using normal frequencies"],
+	["TfIDFCosineSim", computation.TfIdf, "A Cosine similarity algorythm using Tf-Idf weighted frequencies"]
 ]
 
 if __name__ == "__main__":

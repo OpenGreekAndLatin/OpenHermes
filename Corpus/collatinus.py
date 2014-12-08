@@ -68,6 +68,7 @@ class Collatinus(Dictionary):
 			"105" : "Greek"
 		}
 		
+		self.senseSplitter = re.compile("(?:\:|\;|[0-9]+\.|(?:[\s]*\-)*[0-9]+[\s]*\-)")
 		self.getPath(self.__class__.__name__)
 
 	def install(self):
@@ -110,7 +111,6 @@ class Collatinus(Dictionary):
 			"N" : defaultdict(list),
 			"ADJ" : defaultdict(list)
 		}
-		senseSplitter = re.compile("(?:\:|\;|[0-9]+\.|(?:[\s]*\-)*[0-9]+[\s]*\-)")
 		with open(self.root + "lemmata.{0}".format(self.targetlang)) as f:
 			lines = [line for line in f.read().split("\n") if len(line)>0 and not line[0] == "!"]
 		
@@ -118,7 +118,7 @@ class Collatinus(Dictionary):
 				elements = line.split("|")
 				lemma = self.normalize(elements[0])
 				senses = elements[1]
-				senses = senseSplitter.split(senses)
+				senses = self.senseSplitter.split(senses)
 				POS = self.getPOS(lemma)
 				if POS in dictionaries:
 					for sense in senses:
