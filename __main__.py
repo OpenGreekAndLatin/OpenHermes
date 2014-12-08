@@ -135,7 +135,7 @@ AvailableCorpus = [
 
 AvailableAlgorythm = [
 	["CosineSim", computation.CosineSim, "A Cosine similarity algorythm using normal frequencies"],
-	["TfIDFCosineSim", computation.TfIdf, "A Cosine similarity algorythm using Tf-Idf weighted frequencies"]
+	["TfIDFCosineSim", computation.TfIdfCosineSim, "A Cosine similarity algorythm using Tf-Idf weighted frequencies"]
 ]
 
 if __name__ == "__main__":
@@ -198,7 +198,7 @@ if __name__ == "__main__":
 			else:
 				match = [group for group in AvailableAlgorythm if group[0] == o[1]]
 				if len(match) == 1:
-					algorythm = match[0]
+					algorythm = match[0][1]
 				else:
 					print("Unknown algorythm")
 					sys.exit()
