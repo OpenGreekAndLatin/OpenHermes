@@ -8,20 +8,34 @@ import os
 import re
 import unicodedata
 from collections import defaultdict
-from nltk.tokenize import RegexpTokenizer
+from string import punctuation
 
 from Corpus.dictionaries import Dictionary
 
 class Collatinus(Dictionary):
 	def __init__(self, lang, *args, **kw):
 		super(self.__class__, self).__init__(*args, **kw)
+
+		self.isolang = {
+			"es" : "spa",
+			"ca" : "cat",
+			"uk" : "eng",
+			"fr" : "fre",
+			"de" : "ger",
+			"gl" : "gla",
+			"it" : "ita",
+			"pt" : "por"
+		}
+
+		self.collatinuslang = lang
 		self.sourcelang = "la"
-		self.targetlang = lang
+		self.targetlang = self.isolang[lang]
+
 		self.root = os.path.dirname((os.path.abspath(__file__))) + "/../Copyrighted/collatinus/"
 
 		self.latin = self.loadLatin()
 
-		self.tokenizer = RegexpTokenizer(r'\w+')
+		self.file = self.root + "lemmata.{0}".format(self.collatinuslang)
 
 		#According to document mdlrad.la (Model radical) in collatinus.mdlrad
 		self.flexio = {
@@ -111,7 +125,7 @@ class Collatinus(Dictionary):
 			"N" : defaultdict(list),
 			"ADJ" : defaultdict(list)
 		}
-		with open(self.root + "lemmata.{0}".format(self.targetlang)) as f:
+		with open(self.file) as f:
 			lines = [line for line in f.read().split("\n") if len(line)>0 and not line[0] == "!"]
 		
 			for line in lines:
@@ -123,7 +137,7 @@ class Collatinus(Dictionary):
 				if POS in dictionaries:
 					for sense in senses:
 						if len(sense) > 0:
-							dictionaries[POS][lemma].append(sense)
+							dictionaries[POS][lemma].append(self.removeStopwords(sense))
 					
 		return dictionaries
 
