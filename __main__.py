@@ -21,8 +21,8 @@ class OpenSynonyms(object):
 		if POS not in self.results:
 			raise ValueError("This PartOfSpeach is not available in this Corpus")
 
-		df = self.results[POS]
-		found = df.sort(lemma, ascending=True)
+		found = self.results[POS]
+		found = found.sort(lemma, ascending=True)
 		found = found[lemma]
 		found = found[found > 0.0]
 		found_subset = found[1:10]
@@ -128,7 +128,7 @@ AvailableCorpus = [
 		"de" : Collatinus("de"),
 		"ca" : Collatinus("ca"),
 		"gl" : Collatinus("gl"),
-		"it" : Collatinus("la"),
+		"it" : Collatinus("it"),
 		"pt" : Collatinus("pt")
 	}, "(Latin) Corpus based on Collatinus lexicons"]
 ]
