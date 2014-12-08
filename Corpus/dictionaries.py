@@ -7,13 +7,17 @@ import sys
 sys.path.append("../")
 
 import os
-from Tools.download import File
-from Tools.download import Copyrighted
+import glob
+import pickle
+import regex as re
 
 import xml.etree.cElementTree as cElementTree
 from collections import defaultdict
-import glob
-import pickle
+from string import punctuation
+
+from Tools.download import File
+from Tools.download import Copyrighted
+
 
 
 class Dictionary(object):
@@ -21,7 +25,24 @@ class Dictionary(object):
 		self.sourcelang = None
 		self.targetlang = None
 		self.url = None
+		self.stopwords = None
 		self.data = {}
+
+		self.punctSplitter = re.compile(r'[%s]' % (punctuation))
+
+	def loadStopwords(self):
+		stopwords = []
+		stopwords_file = "{0}/../stopwords/{1}.txt".format(os.path.dirname(os.path.abspath(__file__)), self.targetlang)
+		if os.path.isfile(stopwords_file):
+			with open(stopwords_file, "r") as f:
+				stopwords = [word.replace("\n", "") for word in f.readlines() if word[0] != "#"]
+		self.stopwords = stopwords
+
+	def removeStopwords(self, string):
+		if self.stopwords == None:
+			self.loadStopwords()
+		return " ".join(word for word in self.punctSplitter.sub(' ', string).split() if word.lower() not in self.stopwords)
+
 
 	def getPath(self, className):
 		self.path = os.path.dirname(os.path.abspath(__file__)) + "/../Cache/{0}-{1}-{2}.pickle".format(className, self.sourcelang, self.targetlang)

@@ -99,7 +99,7 @@ class LSJ(Dictionary):
 					pos = POS[pos_text]
 					senses = word.findall('./sense/tr')
 					text = " ".join([s.text for s in senses])
-					data[pos][orth].append(text)
+					data[pos][orth].append(self.removeStopwords(text))
 		self.data = data
 		return data
 
