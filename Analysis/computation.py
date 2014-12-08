@@ -44,17 +44,15 @@ class CosineSim(Computation):
 				if pos in self.freqdist[lang].keys():
 					print("Computing on {0} / POS {1} ".format(lang, pos))
 					self.normal_df(self.freqdist[lang][pos])
-					self.scores[lang][pos] = pandas.DataFrame(
+					self.scores[pos][lang] = pandas.DataFrame(
 						p_d(self.df, metric=self.metric),
 						index=self.df.index,
 						columns=self.df.index)
-					try:
-						self.average[pos] = (self.average[pos] + self.scores[lang][pos])
-					except:
-						self.average[pos] = self.scores[lang][pos]
-						
-			if pos in self.average.keys():
-				self.average[pos] = self.average[pos] / len(self.data)
+		
+
+			self.average[pos] = pandas.concat([self.scores[pos][lang] for lang in self.scores[pos]])
+			self.average[pos] = self.average[pos].groupby(self.average[pos].index)
+			self.average[pos] = self.average[pos].mean()
 
 		return self.average
 
