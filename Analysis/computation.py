@@ -3,6 +3,7 @@
 
 import pandas
 from sklearn.metrics.pairwise import pairwise_distances as p_d
+from sklearn.feature_extraction.text import TfidfTransformer 
 from collections import Counter, defaultdict
 import re
 from string import punctuation
@@ -26,7 +27,9 @@ class Computation():
 	def sparsify(self, dense):
 		return dense.to_sparse(fill_value=0)
 
-
+class TfIdf(Computation):
+	def __init__(self, data):
+		self.data = data #Structured as [pos][lang]
 
 class CosineSim(Computation):
 
