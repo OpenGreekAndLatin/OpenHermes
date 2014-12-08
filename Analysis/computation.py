@@ -48,10 +48,9 @@ class CosineSim(Computation):
 						p_d(self.df, metric=self.metric),
 						index=self.df.index,
 						columns=self.df.index)
-		
 
 			self.average[pos] = pandas.concat([self.scores[pos][lang] for lang in self.scores[pos]])
-			self.average[pos] = self.average[pos].groupby(self.average[pos].index)
+			self.average[pos] = self.average[pos].groupby(by = self.average[pos].index)
 			self.average[pos] = self.average[pos].mean()
 
 		return self.average
