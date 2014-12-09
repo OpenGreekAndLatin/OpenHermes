@@ -10,7 +10,7 @@ from Analysis.computation import TfIdfCosineSim
 from Corpus.collatinus import Collatinus
 
 
-Col = Collatinus("en")
+Col = Collatinus("uk")
 source_data = {
 	"fr" : {
 		"N" : {
