@@ -18,8 +18,6 @@ from string import punctuation
 from Tools.download import File
 from Tools.download import Copyrighted
 
-
-
 class Dictionary(object):
 	def __init__(self):
 		self.sourcelang = None
@@ -117,3 +115,12 @@ class Dictionary(object):
 		raise NotImplementedError("Convert is not implemented")
 		self.data = data
 		return data
+
+
+
+class Shelf(object):
+	def __init__(self, dictionaries):
+		self.data = dictionaries
+		for value in dictionaries.values():
+			if not isinstance(value, (Dictionary)):
+				raise TypeError("An element of the dictionaries is not a Corpus.collatinus.Collatinus object")

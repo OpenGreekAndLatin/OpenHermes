@@ -5,37 +5,22 @@ import getopt
 import sys
 import os
 
-
-#############################################################################################
-#
-#
-#	Commandline part
-#
-#
-#############################################################################################
-
+#Process
 from Analysis.process import OpenSynonyms
-from Corpus import latin, greek
-from Corpus.collatinus import Collatinus
+#Analysis
 from Analysis import computation
+#Shelves
+from Corpus.collatinus import Collatini
+from Corpus.greek import Greek
+#Commandlines
 from Tools.cmd import color
 
 
 #We set up a list of available to run corpus
 #Tuples
 AvailableCorpus = [
-	["Greek", {
-		"LSJ" : greek.LSJ()
-	}, "(Greek) Corpus based on LSJ"],
-	["Collatinus", {
-		"en" : Collatinus("uk"),
-		"fr" : Collatinus("fr"),
-		"de" : Collatinus("de"),
-		"ca" : Collatinus("ca"),
-		"gl" : Collatinus("gl"),
-		"it" : Collatinus("it"),
-		"pt" : Collatinus("pt")
-	}, "(Latin) Corpus based on Collatinus lexicons"]
+	["Greek", Greek, "(Greek) Corpus based on LSJ"],
+	["Collatinus", Collatini, "(Latin) Corpus based on Collatinus lexicons"]
 ]
 
 AvailableAlgorythm = [
@@ -124,8 +109,7 @@ if __name__ == "__main__":
 
 	instance = OpenSynonyms(
 			corpus = corpus[1],
-			algorythm = algorythm,
-			name = corpus[0]
+			algorythm = algorythm
 		)
 	instance.generate()
 	instance.analyse(debug = True)

@@ -10,7 +10,7 @@ import unicodedata
 from collections import defaultdict
 from string import punctuation
 
-from Corpus.dictionaries import Dictionary
+from Corpus.dictionaries import Dictionary, Shelf
 
 class Collatinus(Dictionary):
 	def __init__(self, lang, *args, **kw):
@@ -144,4 +144,16 @@ class Collatinus(Dictionary):
 	def convert(self, force = False):
 		return self._convert(force = force, callback = self.callback)
 
-
+class Collatini(Shelf):
+	"""A corpus representing every language available in Collatinus"""
+	def __init__(self):
+		data = {
+			"en" : Collatinus("uk"),
+			"fr" : Collatinus("fr"),
+			"de" : Collatinus("de"),
+			"ca" : Collatinus("ca"),
+			"gl" : Collatinus("gl"),
+			"it" : Collatinus("it"),
+			"pt" : Collatinus("pt")
+		}
+		super(Collatini, self).__init__(dictionaries = data)

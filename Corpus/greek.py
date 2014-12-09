@@ -3,20 +3,17 @@
 
 # Import sys for relative import
 import sys
-sys.path.append("../")
-
-from Corpus.dictionaries import Dictionary
-from Tools.download import GithubDir
-
-import xml.etree.cElementTree as cElementTree
 from collections import defaultdict
 import glob
-import re
+import regex as re
 import pickle
 import os
 import xml
 
-from Tools.download import File
+sys.path.append("../")
+
+from Corpus.dictionaries import Dictionary, Shelf
+from Tools.download import GithubDir, File
 
 class LSJ(Dictionary):
 	def __init__(self, *args, **kw):
@@ -90,7 +87,7 @@ class LSJ(Dictionary):
 		pos = None
 
 		for file in files:
-			tree = cElementTree.parse(file)
+			tree = xml.etree.cElementTree.parse(file)
 			root = tree.getroot()
 			for word in root.findall('.//entryFree'):
 				orth = word.find("./orth").text
@@ -114,3 +111,12 @@ class LSJ(Dictionary):
 
 	def convert(self, force = False):
 		return self._convert(force, callback = self.callback)
+
+class Greek(Shelf):
+	"""Corpus including all Greek Dictionaries GreekCorpus"""
+	def __init__(self):
+		data = {
+			"LSJ" : LSJ()
+		}
+		super(Greek, self).__init__(dictionaries = data)
+		

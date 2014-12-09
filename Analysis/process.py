@@ -5,13 +5,24 @@ import sys
 import os
 import pickle
 
-class OpenSynonyms(object):
-	def __init__(self, corpus, algorythm, name = "OpenSynonyms"):
-		self.corpus = corpus
-		self.algorythm = algorythm
-		self.path = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
 
-		self.name = name
+from Corpus.dictionaries import Shelf
+from Analysis.computation import Computation
+
+class OpenSynonyms(object):
+	def __init__(self, corpus, algorythm):
+		if not issubclass(corpus, (Shelf)):
+			raise TypeError("Corpus is not a subclass of Corpus.dictionaries.Shelf")
+
+		if not issubclass(algorythm, (Computation)):
+			raise TypeError("algorythm is not a subclass of Analysis.computation.Computation")
+
+		self.shelf = corpus
+		self.corpus = self.shelf()
+		self.algorythm = algorythm
+
+		self.path = os.path.dirname(os.path.abspath(__file__))
 
 	def search(self, POS = "N", lemma = "bonus"):
 		if not self.results:
@@ -38,14 +49,15 @@ class OpenSynonyms(object):
 	def generate(self, force = False):
 		""" Read and Generate the dictionaries """
 		data = {}
-		for lang in self.corpus:
-			data[lang] = self.corpus[lang].convert(force = force)
+		for lang in self.corpus.data:
+			data[lang] = self.corpus.data[lang].convert(force = force)
 		self.data = data
 		return data
 
 	def analyse(self, force = False, debug = False, path = None):
 		if self.from_pickle(path):
 			return self.results
+		print("Hello ?")
 
 		""" Run the algorythm on the corpus """
 		self.instance = self.algorythm(self.data)
@@ -60,7 +72,7 @@ class OpenSynonyms(object):
 	def from_pickle(self, path = None, debug = False):
 		if not path:
 			path = self.path + "/../Cache/"
-		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.name)
+		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.shelf.__name__)
 
 		if not os.path.isfile(path):
 			return False
@@ -73,7 +85,7 @@ class OpenSynonyms(object):
 	def to_pickle(self, path = None, debug = False):
 		if not path:
 			path = self.path + "/../Cache/"
-		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.name)
+		path = "{0}OGL_{1}_{2}_average.pickle".format(path, self.algorythm.__name__, self.shelf.__name__)
 
 		with open(path, "wb") as f:
 			pickle.dump(self.results, f)
@@ -87,7 +99,7 @@ class OpenSynonyms(object):
 			if not path:
 				path = self.path + "/Results/"
 
-			path = "{0}OGL_{1}_{2}_{3}_average.csv".format(path, POS, self.algorythm.__name__, self.name)
+			path = "{0}OGL_{1}_{2}_{3}_average.csv".format(path, POS, self.algorythm.__name__, self.shelf.__name__)
 
 			self.results[POS].to_csv(path)
 			if debug == True:
