@@ -139,12 +139,13 @@ class CosineSim(Computation):
 		self.scores = defaultdict(dict)
 		self.average = {}
 
-	def similarity(self, POS = ['ADJ', 'V', 'N']):
+	def similarity(self, POS = ['ADJ', 'V', 'N'], debug = False):
 		pos_list = POS
 		for pos in pos_list:
 			for lang in self.freqdist.keys():
 				if pos in self.freqdist[lang].keys():
-					print("Computing on {0} / POS {1} ".format(lang, pos))
+					if debug:
+						print("Computing on {0} / POS {1} ".format(lang, pos))
 					self.normal_df(self.freqdist[lang][pos])
 					self.scores[pos][lang] = pandas.DataFrame(
 						p_d(self.df, metric=self.metric),
@@ -164,7 +165,8 @@ class CosineSim(Computation):
 			raise TypeError('Data format must be DataFrame or Dictionary')
 
 	def dictConvert(self):
-		return self.individualCounterConvert()
+		self.freqdist = self.individualCounterConvert()
+		return self.freqdist
 
 	def sparsify(self):
 		self.df = pandas.SparseDataFrame(self.freqdist)
