@@ -23,7 +23,10 @@ When creating a new `Shelf` object, the object should have a `data` properties c
 `from Analysis.computation import Computation`
 
 ##Required data
+- `Computation.scores`
+- `Computation.average`
+- `Computation.freqdist`
 
 ##Required functions
 - `Computation.dictConvert(self,data)` transforms and cache `Shelf.data` for further reuse in `similarity`.
-- `Computation.similarity(self)` computes 
+- `Computation.similarity(self, POS = ["N", "ADJ", "V"] debug = True)` computes and returns a `Computation.average` object where depth *n*'s key is a `POS` and its `value` a DataFrame
