@@ -1029,8 +1029,13 @@ body .markdown-body
 <h2 id="import_2"><a name="user-content-import_2" href="#import_2" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Import</h2>
 <p><code>from Analysis.computation import Computation</code></p>
 <h2 id="required-data"><a name="user-content-required-data" href="#required-data" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Required data</h2>
+<ul>
+<li><code>Computation.scores</code></li>
+<li><code>Computation.average</code></li>
+<li><code>Computation.freqdist</code></li>
+</ul>
 <h2 id="required-functions"><a name="user-content-required-functions" href="#required-functions" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Required functions</h2>
 <ul>
 <li><code>Computation.dictConvert(self,data)</code> transforms and cache <code>Shelf.data</code> for further reuse in <code>similarity</code>.</li>
-<li><code>Computation.similarity(self)</code> computes </li>
+<li><code>Computation.similarity(self, POS = ["N", "ADJ", "V"] debug = True)</code> computes and returns a <code>Computation.average</code> object where depth <em>n</em>&lsquo;s key is a <code>POS</code> and its <code>value</code> a DataFrame</li>
 </ul></article></body></html>
