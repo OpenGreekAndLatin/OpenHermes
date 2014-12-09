@@ -2,7 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import sys, os
-sys.path.append("../")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
 
 from nose import with_setup
 from Corpus.collatinus import Collatinus

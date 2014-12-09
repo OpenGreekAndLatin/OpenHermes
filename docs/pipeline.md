@@ -15,7 +15,7 @@ This project is built around different classes: `Computation`, `Dictionary`, `Sh
 `from Corpus.dictionaries import Shelf`
 
 ##Implementation
-When creating a new `Shelf` object, the object should have a `data` properties containing 
+When creating a new `Shelf` object, the object should have a `data` properties containing a dictionary where keys are string and values are `Dictionary` instances.
 
 #Computation object
 

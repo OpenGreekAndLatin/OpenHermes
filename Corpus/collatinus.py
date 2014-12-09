@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # Import sys for relative import
-import sys
-sys.path.append("../")
-import os
-import re
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
+import regex as re
 import unicodedata
 from collections import defaultdict
 from string import punctuation

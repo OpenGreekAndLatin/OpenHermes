@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 # Import sys for relative import
-import sys
+import sys, os
+
 from collections import defaultdict
 import glob
 import regex as re
 import pickle
-import os
 import xml
 
-sys.path.append("../")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
 
 from Corpus.dictionaries import Dictionary, Shelf
 from Tools.download import GithubDir, File

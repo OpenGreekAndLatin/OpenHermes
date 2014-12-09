@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys
-import os
+import sys, os
 import pickle
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
@@ -57,7 +56,6 @@ class OpenSynonyms(object):
 	def analyse(self, force = False, debug = False, path = None):
 		if self.from_pickle(path):
 			return self.results
-		print("Hello ?")
 
 		""" Run the algorythm on the corpus """
 		self.instance = self.algorythm(self.data)
