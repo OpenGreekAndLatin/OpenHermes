@@ -1,1 +1,0 @@
-Those file should be deleted. Information about them should be kept here

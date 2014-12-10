@@ -2,7 +2,8 @@
 # -*- coding: UTF-8 -*-
 
 import sys, os
-sys.path.append("../")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../")
+
 
 from nose import with_setup
 
@@ -10,7 +11,7 @@ from Analysis.computation import TfIdfCosineSim
 from Corpus.collatinus import Collatinus
 
 
-Col = Collatinus("en")
+Col = Collatinus("uk")
 source_data = {
 	"fr" : {
 		"N" : {
