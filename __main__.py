@@ -7,19 +7,19 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/")
 
-#Process
+# Process
 from Analysis.process import OpenSynonyms
-#Analysis
+# Analysis
 from Analysis import computation
-#Shelves
+# Shelves
 from Corpus.collatinus import Collatini
 from Corpus.greek import Greek
-#Commandlines
+# Commandlines
 from Tools.cmd import color
 
 
-#We set up a list of available to run corpus
-#Tuples
+# We set up a list of available to run corpus
+# Tuples
 AvailableCorpus = [
     ["Greek", Greek, "(Greek) Corpus based on LSJ"],
     ["Collatinus", Collatini, "(Latin) Corpus based on Collatinus lexicons"]

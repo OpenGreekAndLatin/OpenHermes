@@ -63,7 +63,7 @@ class File(object):
                 try:
                     filename = os.path.basename(filepath)
                     source = myzip.open(filepath)
-                    target = file(os.path.join(path, filename), "wb")
+                    target = open(os.path.join(path, filename), "wb")
                     with source, target:
                         shutil.copyfileobj(source, target)
                 except Exception as E:
@@ -129,7 +129,15 @@ class GithubDir(Github):
         self.sourceDir = "{0}-{1}/{2}".format(self.repository, self.branch, self.sourceDir)
 
     def download(self):
-        #First step, with get the dir
+        # First step, with get the dir
         if self.zip():
             return self.file.unzip(path=self.path, sourceDir=self.sourceDir)
         return False
+
+    def clean(self, preserve):
+        for root, dirs, files in os.walk(self.path):
+            for name in files:
+                if name not in preserve:
+                    os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))

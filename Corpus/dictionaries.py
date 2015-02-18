@@ -87,6 +87,9 @@ class Dictionary(object):
             self.dump()
         return self.data
 
+    def check(self):
+        return True
+
 
 class Shelf(object):
     def __init__(self, dictionaries):
@@ -94,3 +97,21 @@ class Shelf(object):
         for value in dictionaries.values():
             if not isinstance(value, (Dictionary)):
                 raise TypeError("An element of the dictionaries is not a Corpus.collatinus.Collatinus object")
+
+    def check(self, force=False):
+        for dictionary in self.data.values():
+            if dictionary.check():
+                pass
+            elif force is True:
+                if dictionary.install():
+                    continue
+                else:
+                    return False
+            else:
+                return False
+        return True
+
+    def install(self):
+        for dictionary in self.data.values():
+            dictionary.install()
+        return True

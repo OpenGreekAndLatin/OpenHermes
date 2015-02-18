@@ -21,7 +21,7 @@ from Tools.download import GithubDir, File
 class LSJ(Dictionary):
     def __init__(self, *args, **kw):
         super(self.__class__, self).__init__(*args, **kw)
-        #Based on Perseus Digital Library
+        # Based on Perseus Digital Library
         self.sourcelang = "gr"
         self.targetlang = "en"
         self.file = GithubDir(
@@ -40,14 +40,14 @@ class LSJ(Dictionary):
         return self.file.download()
 
     def installPOS(self):
-        #Checking / downloading the file
+        # Checking / downloading the file
         path = os.path.dirname(os.path.abspath(__file__))
         greekMorph = File(
             url="https://github.com/jfinkels/hopper/raw/master/xml/data/greek.morph.xml",
             path="Cache",
             filename="greek.morph.xml"
         )
-        #Parsing it
+        # Parsing it
         data = {}
         for event, elem in xml.etree.cElementTree.iterparse(greekMorph.path):
             if elem.tag == "analysis":
@@ -82,7 +82,7 @@ class LSJ(Dictionary):
         """
             Common method for LS and LSJ as they share the same structure
         """
-        #I think we should move from BS to something else...
+        # I think we should move from BS to something else...
         files = glob.glob('/'.join([self.file.path, '*.xml']))
         data = {}
 
@@ -116,6 +116,19 @@ class LSJ(Dictionary):
 
     def convert(self, force=False):
         return self._convert(force, callback=self.callback)
+
+    def check(self):
+        """
+            There is two type of files we need to get :
+             - Betacode POS registry
+             - Dictionary files
+        """
+        path = os.path.dirname(os.path.abspath(__file__))
+        poses = path + "/../Cache/greek.betacode.pos.pickle"
+        xmlFiles = len([name for name in os.listdir(path + '/../Files/LSJ') if os.path.isfile(path + "/../Files/LSJ/" + name)])
+        if xmlFiles == 27 and os.path.isfile(poses):
+            return True
+        return False
 
 
 class Greek(Shelf):

@@ -12,6 +12,7 @@ import unicodedata
 from collections import defaultdict
 
 from Corpus.dictionaries import Dictionary, Shelf
+from Tools.download import GithubDir
 
 
 class Collatinus(Dictionary):
@@ -29,17 +30,30 @@ class Collatinus(Dictionary):
             "pt": "por"
         }
 
+        self.supported = ["lemmata.{0}".format(key) for key in self.isolang]
+
         self.collatinuslang = lang
         self.sourcelang = "la"
         self.targetlang = self.isolang[lang]
 
-        self.root = os.path.dirname((os.path.abspath(__file__))) + "/../Copyrighted/collatinus/"
+        self.root = os.path.dirname((os.path.abspath(__file__))) + "/../Files/Collatinus/"
 
-        self.latin = self.loadLatin()
+        try:
+            self.latin = self.loadLatin()
+        except:
+            print("Data needs to be installed")
 
         self.file = self.root + "lemmata.{0}".format(self.collatinuslang)
+        self.posFile = self.root + "lemmata.la"
 
-        #According to document mdlrad.la (Model radical) in collatinus.mdlrad
+        self.source = GithubDir(
+            "Biblissima",
+            "collatinus-data",
+            "Files/Collatinus",
+            sourceDir="ressources"
+        )
+
+        # According to document mdlrad.la (Model radical) in collatinus.mdlrad
         self.flexio = {
             "0": "N",  # Noun
             "1": "N",
@@ -86,8 +100,21 @@ class Collatinus(Dictionary):
         self.senseSplitter = re.compile("(?:\:|\;|[0-9]+\.|(?:[\s]*\-)*[0-9]+[\s]*\-)")
         self.getPath(self.__class__.__name__)
 
+    def check(self):
+        """
+        Collatinus needs two files AT LEAST for running one dictionary :
+            - the one of its set-up language
+            - the one of lemmata translations
+        """
+        if os.path.isfile(self.file) and os.path.isfile(self.posFile):
+            return True
+        return False
+
     def install(self):
-        raise NotImplementedError("Install is not installed")
+        self.source.download()
+        self.source.clean(self.supported + ["lemmata.la"])
+        self.latin = self.loadLatin()
+        return True
 
     def checkConverted(self):
         raise NotImplementedError("CheckConverted is not implemented")
@@ -157,4 +184,4 @@ class Collatini(Shelf):
             "it": Collatinus("it"),
             "pt": Collatinus("pt")
         }
-        super(Collatini, self).__init__(dictionaries=data)
+        super(self.__class__, self).__init__(dictionaries=data)
