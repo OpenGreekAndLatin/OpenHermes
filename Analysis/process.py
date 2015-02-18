@@ -21,6 +21,7 @@ class OpenSynonyms(object):
 
         self.shelf = corpus
         self.corpus = self.shelf()
+        self.corpus.check(force=True)
         self.algorythm = algorythm
 
         self.path = os.path.dirname(os.path.abspath(__file__))
